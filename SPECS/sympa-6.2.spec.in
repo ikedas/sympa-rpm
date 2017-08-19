@@ -325,6 +325,7 @@ export PATH
 %configure \
     --enable-fhs \
     --prefix=%{_prefix} \
+    --bindir=%{_libexecdir}/sympa \
     --docdir=%{_docdir}/%{name} \
     --libexecdir=%{_libexecdir}/sympa \
     --localstatedir=%{_localstatedir} \
@@ -720,6 +721,10 @@ fi
 
 
 %changelog
+* Sun Aug 19 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.19b.1-1
+- Added --bindir to install sympa_smtpc under libexecdir.
+
+
 * Sun Jun 25 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.18-1
 - Updated.
 
