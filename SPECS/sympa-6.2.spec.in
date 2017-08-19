@@ -29,9 +29,9 @@ Source114:   aliases.sympa.sendmail
 Source115:   aliases.sympa.postfix
 Source129:   sympa.service.d-dependencies.conf
 
-# FIXME : Add comment
+# Add path to MHonArc::UTF8 so that sympa_wizard won't miss it
 Patch5:      sympa-6.2a.40-r11708-wizard-mhonarc.patch
-# FIXME : Add comment
+# RPM specific customization of site defaults
 Patch13:     sympa-6.2a.38-r11093-confdef.patch
 # Disable sympa service by default
 Patch14:     sympa-6.2-initdefault.patch
