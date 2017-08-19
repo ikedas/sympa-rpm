@@ -1,0 +1,33 @@
+--- src/lib/Sympa/ConfDef.pm.confdef	2014-06-29 17:23:52.000000000 +0900
++++ src/lib/Sympa/ConfDef.pm	2014-06-30 11:21:41.083949152 +0900
+@@ -1521,6 +1521,30 @@
+ ##    },
+ );
+ 
++# RPM specific customizations
++foreach my $p (@params) {
++    next unless $p->{name};
++    delete $p->{edit}
++        if $p->{name} =~ /^(home|etc|static_content_path|syslog|log_facility|
++                            email|cache_list_config|mhonarc|openssl|
++                            use_fast_cgi)$/x;
++#    $p->{edit} = '1'
++#        if $p->{name} =~ /^(log_socket_type|
++#                            legacy_character_support_feature)$/x;
++#    $p->{default} = 'database'
++#       if $p->{name} eq 'cache_list_config';
++    $p->{sample} = '/usr/bin/openssl'
++        if $p->{name} eq 'openssl';
++    $p->{sample} = '/etc/pki/tls/certs'
++        if $p->{name} eq 'capath';
++    $p->{sample} = '/etc/pki/tls/certs/ca-bundle.crt'
++        if $p->{name} eq 'cafile';
++    $p->{default} = '/var/lib/sympa/X509-user-certs'
++        if $p->{name} eq 'ssl_cert_dir';
++    $p->{default} = '/var/lib/sympa/crl'
++        if $p->{name} eq 'crl_dir';
++}
++
+ 1;
+ __END__
+ 

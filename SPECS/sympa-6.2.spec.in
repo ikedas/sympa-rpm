@@ -1,0 +1,760 @@
+%if 0%{?fedora} || 7 <= 0%{?rhel}
+%global use_systemd 1
+%else
+%global use_systemd 0
+%endif
+
+%define _default_patch_fuzz 1
+
+Name:        sympa
+Version:     @VERSION@
+Release:     1@REV@%{?dist}
+Summary(fr): Gestionnaire de listes électroniques
+Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
+Summary:     Powerful multilingual List Manager
+License:     GPLv2+
+Group:       System Environment/Daemons
+URL:         http://www.sympa.org
+
+Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}/%{name}-%{version}.tar.gz
+
+Source101:   httpd-fcgid-sympa.conf
+Source102:   lighttpd-sympa.conf
+Source103:   nginx-spawn_fcgi-sympa.conf
+Source104:   nginx-wwsympa-6.2.init
+Source105:   nginx-sympasoap-6.2.init
+Source106:   rsyslog-sympa.conf
+Source107:   sympa-logrotate.conf
+Source112:   sympa-6.2.18-el6-README.RPM.md
+Source113:   sympa-6.2.18-el7-README.RPM.md
+Source114:   aliases.sympa.sendmail
+Source115:   aliases.sympa.postfix
+Source129:   sympa.service.d-dependencies.conf
+
+Patch5:      sympa-6.2a.40-r11708-wizard-mhonarc.patch
+Patch13:     sympa-6.2a.38-r11093-confdef.patch
+Patch14:     sympa-6.2-initdefault.patch
+@Patch1xx@
+
+AutoReqProv: no
+
+Requires(pre): shadow-utils
+
+%if ! %{use_systemd}
+Requires(post):   chkconfig
+Requires(preun):  chkconfig
+Requires(preun):  initscripts
+Requires(postun): initscripts
+%endif
+
+Requires:    smtpdaemon
+# requires this release or later (fixed memory leak in POSIX::strftime()).
+Requires: perl >= 4:5.10.1-127
+#wwsympa#Requires: perl(Archive::Zip) >= 1.05
+Requires: perl(AuthCAS) >= 1.4
+Requires: perl(CGI) >= 3.51
+#wwsympa#Requires: perl(CGI::Fast) >= 1.08
+Requires: perl(Class::Singleton) >= 1.03
+Requires: perl(Clone) >= 0.28
+Requires: perl(Crypt::CipherSaber) >= 0.50
+Requires: perl(Crypt::OpenSSL::X509) >= 1.800.1
+Requires: perl(Crypt::SMIME) >= 0.15
+Requires: perl(Data::Password) >= 1.07
+Requires: perl(DateTime::Format::Mail) >= 0.28
+Requires: perl(DateTime::TimeZone) >= 0.59
+Requires: perl(DBD::CSV) >= 0.22
+Requires: perl(DBD::mysql) >= 4.008
+#Requires: perl(DBD::ODBC)
+#Requires: perl(DBD::Oracle) >= 1.02
+#Requires: perl(DBD::Pg) >= 2.00
+#Requires: perl(DBD::SQLite) >= 1.31
+#Requires: perl(DBD::Sybase) >= 0.90
+Requires: perl(DBI) >= 1.48
+Requires: perl(Digest::MD5) >= 2.00
+Requires: perl(Encode)
+Requires: perl(Encode::Locale) >= 1.02
+#wwsympa#Requires: perl(FCGI) >= 0.67
+Requires: perl(File::Copy::Recursive) >= 0.36
+Requires: perl(File::NFSLock)
+Requires: perl(File::Path) >= 2.08
+Requires: perl(HTML::FormatText)
+Requires: perl(HTML::StripScripts::Parser) >= 1.03
+Requires: perl(HTML::TreeBuilder)
+Requires: perl(IO::File) >= 1.10
+Requires: perl(IO::Scalar)
+Requires: perl(IO::Socket::SSL) >= 0.90
+Requires: perl(List::Util::XS) >= 1.20
+Requires: perl(Locale::Messages) >= 1.20
+Requires: perl(LWP::UserAgent)
+Requires: perl(Mail::Address) >= 1.70
+Requires: perl(Mail::DKIM::Verifier) >= 0.37
+Requires: perl(MIME::Base64) >= 3.03
+Requires: perl(MIME::Charset) >= 1.011.3
+Requires: perl(MIME::EncWords) >= 1.014
+#wwsympa#Requires: perl(MIME::Lite::HTML) >= 1.23
+Requires: perl(MIME::Tools) >= 5.423
+Requires: perl(Net::CIDR) >= 0.16
+Requires: perl(Net::DNS) >= 0.65
+Requires: perl(Net::LDAP) >= 0.40
+Requires: perl(Net::SMTP)
+#wwsympa#Requires: perl(SOAP::Lite) >= 0.712
+Requires: perl(Sys::Syslog) >= 0.03
+Requires: perl(Template) >= 2.21
+Requires: perl(Term::ProgressBar) >= 2.09
+Requires: perl(Text::LineFold) >= 2011.05
+Requires: perl(Time::HiRes) >= 1.29
+# for Perl prior to 5.16.0.
+%if 0%{?rhel} && 0%{?rhel} < 7
+Requires: perl(Unicode::CaseFold) >= 0.02
+%endif
+Requires: perl(Unicode::Normalize) >= 0.23
+Requires: perl(URI::Escape) >= 3.28
+Requires: perl(XML::LibXML) >= 1.70
+Requires: mhonarc >= 2.6.18
+#wwsympa#Requires: webserver
+
+# Recommended for handling Japanese vendor codepages.
+Requires: perl(Encode::EUCJPASCII) >= 0.02
+# Handling several Chinese standards.
+Requires: perl(Encode::HanExtra) >= 0.20
+
+BuildRequires: gcc, make
+BuildRequires: gettext
+%if %{use_systemd}
+BuildRequires: systemd
+%endif
+
+# Only for evelopment
+%if 0%{?do_autoreconf}
+BuildRequires: autoconf, automake, gettext-devel
+%endif
+
+# install & check
+BuildRequires: perl(Archive::Zip)
+#BuildRequires: perl(AuthCAS)
+BuildRequires: perl(CGI)
+#BuildRequires: perl(CGI::Fast)
+BuildRequires: perl(Class::Singleton)
+BuildRequires: perl(Clone) >= 0.28
+#BuildRequires: perl(Crypt::CipherSaber)
+#BuildRequires: perl(Crypt::OpenSSL::X509)
+#BuildRequires: perl(Crypt::SMIME)
+#BuildRequires: perl(Data::Password)
+BuildRequires: perl(DateTime::Format::Mail)
+BuildRequires: perl(DateTime::TimeZone)
+#BuildRequires: perl(DBD::CSV)
+#BuildRequires: perl(DBD::mysql)
+#BuildRequires: perl(DBD::ODBC)
+#BuildRequires: perl(DBD::Oracle)
+#BuildRequires: perl(DBD::Pg)
+#BuildRequires: perl(DBD::SQLite)
+#BuildRequires: perl(DBD::Sybase)
+BuildRequires: perl(DBI)
+BuildRequires: perl(Digest::MD5)
+BuildRequires: perl(Encode)
+#BuildRequires: perl(Encode::Locale)
+#BuildRequires: perl(FCGI)
+BuildRequires: perl(File::Copy::Recursive)
+BuildRequires: perl(File::NFSLock)
+BuildRequires: perl(File::Path)
+BuildRequires: perl(HTML::FormatText)
+BuildRequires: perl(HTML::StripScripts::Parser)
+BuildRequires: perl(HTML::TreeBuilder)
+BuildRequires: perl(IO::File)
+BuildRequires: perl(IO::Scalar)
+#BuildRequires: perl(IO::Socket::SSL)
+BuildRequires: perl(List::Util::XS)
+BuildRequires: perl(Locale::Messages)
+BuildRequires: perl(LWP::UserAgent)
+BuildRequires: perl(Mail::Address)
+#BuildRequires: perl(Mail::DKIM::Verifier)
+BuildRequires: perl(MIME::Base64)
+BuildRequires: perl(MIME::Charset)
+BuildRequires: perl(MIME::EncWords)
+BuildRequires: perl(MIME::Lite::HTML)
+BuildRequires: perl(MIME::Tools)
+BuildRequires: perl(Net::CIDR)
+#BuildRequires: perl(Net::DNS)
+BuildRequires: perl(Net::LDAP)
+#BuildRequires: perl(Net::SMTP)
+BuildRequires: perl(SOAP::Lite)
+BuildRequires: perl(Sys::Syslog)
+BuildRequires: perl(Template)
+BuildRequires: perl(Term::ProgressBar)
+BuildRequires: perl(Text::LineFold)
+BuildRequires: perl(Time::HiRes)
+%if 0%{?rhel} && 0%{?rhel} < 7
+BuildRequires: perl(Unicode::CaseFold)
+%endif
+BuildRequires: perl(Unicode::Normalize) >= 0.23
+BuildRequires: perl(URI::Escape)
+BuildRequires: perl(XML::LibXML)
+
+BuildRequires: perl(Test::Compile)
+BuildRequires: perl(Test::Harness)
+BuildRequires: perl(Test::More)
+BuildRequires: perl(Test::Pod)
+
+# authorcheck
+%if 0%{?do_authorcheck}
+BuildRequires: perl(Test::Fixme)
+BuildRequires: perl(Test::Perl::Critic)
+BuildRequires: perl(Test::Pod::Coverage)
+BuildRequires: perl(Test::Pod::Spelling::CommonMistakes)
+%endif
+
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%{_arch}
+
+
+%package httpd
+Summary(fr): Sympa avec Serveur HTTP Apache
+Summary(ja): SympaのApache HTTP Server対応
+Summary:  Sympa with Apache HTTP Server
+Group:    System Environment/Daemons
+
+AutoReqProv: no
+
+Requires: %{name} = %{version}-%{release}
+Requires: httpd
+Requires: mod_fcgid
+Requires: perl(Archive::Zip) >= 1.05
+Requires: perl(CGI::Fast) >= 1.08
+Requires: perl(FCGI) >= 0.67
+Requires: perl(MIME::Lite::HTML) >= 1.23
+Requires: perl(SOAP::Lite) >= 0.712
+Conflicts: %{name}-lighttpd, %{name}-nginx
+
+
+%package lighttpd
+Summary(fr): Sympa avec lighttpd
+Summary(ja): Sympaのlighttpd対応
+Summary:  Sympa with lighttpd
+Group:    System Environment/Daemons
+
+AutoReqProv: no
+
+Requires: %{name} = %{version}-%{release}
+Requires: lighttpd
+Requires: lighttpd-fastcgi
+Requires: perl(Archive::Zip) >= 1.05
+Requires: perl(CGI::Fast) >= 1.08
+Requires: perl(FCGI) >= 0.67
+Requires: perl(MIME::Lite::HTML) >= 1.23
+Requires: perl(SOAP::Lite) >= 0.712
+Conflicts: %{name}-httpd, %{name}-nginx
+
+
+%package nginx
+Summary(fr): Sympa avec nginx
+Summary(ja): Sympaのnginx対応
+Summary:  Sympa with nginx
+Group:    System Environment/Daemons
+
+AutoReqProv: no
+
+Requires: %{name} = %{version}-%{release}
+Requires: nginx
+Requires: spawn-fcgi
+Requires: perl(Archive::Zip) >= 1.05
+Requires: perl(CGI::Fast) >= 1.08
+Requires: perl(FCGI) >= 0.67
+Requires: perl(MIME::Lite::HTML) >= 1.23
+Requires: perl(SOAP::Lite) >= 0.712
+Conflicts: %{name}-httpd, %{name}-lighttpd
+
+
+%description -l ja
+Sympa はスケーラブルで高いカスタマイズ性を持つメーリングリスト管理
+ソフトウェアです。巨大なリスト (登録者数 200,000) にも適用でき、完
+全な (一般ユーザ用および管理者用) ウェブインタフェースをそなえてい
+ます。国際化されており、多数の言語に対応します。内蔵のスクリプティ
+ング言語でコマンドの動作を拡張できます。Sympa はまた、LDAP ディレ
+クトリや RDBMS と連携して動的なメーリングリストを作成できます。ま
+た、S/MIME に基づく認証や暗号化もできます。
+
+%description
+Sympa is scalable and highly customizable mailing list manager. It
+can cope with big lists (200,000 subscribers) and comes with a
+complete (user and admin) Web interface. It is internationalized,
+and supports the us, fr, de, es, it, fi, and chinese locales. A
+scripting language allows you to extend the behavior of commands.
+Sympa can be linked to an LDAP directory or an RDBMS to create
+dynamic mailing lists. Sympa provides S/MIME-based authentication
+and encryption.
+
+
+%description httpd -l ja
+Sympa の Apache HTTP Server 対応。
+
+%description httpd
+Apache HTTP Server support for Sympa.
+
+
+%description lighttpd -l ja
+Sympa の lighttpd 対応。
+
+%description lighttpd
+lighttpd support for Sympa.
+
+
+%description nginx -l ja
+Sympa の nginx 対応。
+
+%description nginx
+nginx support for Sympa.
+
+
+%prep
+%setup -q
+@patch1xx@
+%patch5 -p0 -b .mhonarc
+%patch13 -p0 -b .confdef
+%patch14 -p0 -b .initdefault
+
+#X# Fix file encoding
+#Xiconv -f iso-8859-1 -t utf-8 ChangeLog > ChangeLog.utf8 && \
+#Xtouch -r ChangeLog ChangeLog.utf8 && \
+#Xmv ChangeLog.utf8 ChangeLog
+
+# Development
+%if 0%{?do_autoreconf}
+autoreconf --install
+%endif
+
+%build
+PATH=/bin:/usr/bin
+export PATH
+# Give install "-p" preserving mtime to prevent unexpected update of CSS.
+%configure \
+    --enable-fhs \
+    --prefix=%{_prefix} \
+    --docdir=%{_docdir}/%{name} \
+    --libexecdir=%{_libexecdir}/sympa \
+    --localstatedir=%{_localstatedir} \
+    --sysconfdir=%{_sysconfdir}/sympa \
+    --with-cgidir=%{_libexecdir}/sympa \
+    --with-confdir=%{_sysconfdir}/sympa \
+%if 0%{?use_systemd}
+    --without-initdir \
+    --with-unitsdir=%{_unitdir} \
+%else
+    --with-initdir=%{_initrddir} \
+%endif
+    --with-smrshdir=%{_sysconfdir}/smrsh \
+    --with-aliases_file=%{_localstatedir}/lib/sympa/sympa_aliases \
+    INSTALL_DATA='install -c -p -m 644'
+make %{?_smp_mflags}
+# cancel workaround in Makefile getting previous version.
+rm -f previous_sympa_version
+
+pushd po/sympa; rm -f stamp-po; make; popd
+pushd po/web_help; rm -f stamp-po; make; popd
+
+%install
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+
+%find_lang %{name}
+%find_lang web_help
+
+# Fix perm to prevent warning by rpmlint.
+chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
+
+## Remove db_type of sympa.conf
+#perl -i -pe 's/^(db_type\s+)/# $1/' %{buildroot}%{_sysconfdir}/sympa/sympa.conf
+
+# Save version info.
+mv %{buildroot}%{_sysconfdir}/sympa/data_structure.version \
+    %{buildroot}%{_sysconfdir}/sympa/data_structure.current_version
+
+# Copy *httpd config files.
+mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
+install -m 0644 %{SOURCE101} %{buildroot}%{_sysconfdir}/httpd/conf.d/sympa.conf
+mkdir -p %{buildroot}%{_sysconfdir}/lighttpd
+install -m 0644 %{SOURCE102} %{buildroot}%{_sysconfdir}/lighttpd/sympa.conf
+mkdir -p %{buildroot}%{_sysconfdir}/nginx/conf.d
+install -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/nginx/conf.d/sympa.conf
+
+# Copy init scripts or unit files for nginx/spawn-fcgi etc.
+%if %{use_systemd}
+mkdir -p %{buildroot}%{_unitdir}
+install -m 0644 src/etc/script/nginx-wwsympa.service \
+    %{buildroot}%{_unitdir}/wwsympa.service
+install -m 0644 src/etc/script/nginx-sympasoap.service \
+    %{buildroot}%{_unitdir}/sympasoap.service
+mkdir -p %{buildroot}%{_tmpfilesdir}
+install -m 0644 src/etc/script/sympa-tmpfiles.conf \
+    %{buildroot}%{_tmpfilesdir}/sympa.conf
+mkdir -p %{buildroot}%{_sysconfdir}/systemd/system/sympa.service.d
+install -m 0644 %{SOURCE129} \
+    %{buildroot}%{_sysconfdir}/systemd/system/sympa.service.d/dependencies.conf
+%else
+install -m 0744 %{SOURCE104} %{buildroot}%{_initrddir}/wwsympa
+install -m 0744 %{SOURCE105} %{buildroot}%{_initrddir}/sympasoap
+%endif
+
+# Copy rsyslog config
+mkdir -p %{buildroot}%{_sysconfdir}/rsyslog.d
+install -m 0644 %{SOURCE106} %{buildroot}%{_sysconfdir}/rsyslog.d/sympa.conf
+
+# Copy docs.
+mv %{buildroot}%{_docdir}/%{name} __doc
+cp -p AUTHORS.md COPYING NEWS.md OChangeLog ONEWS README.md __doc/
+%if %{use_systemd}
+cp -p %{SOURCE113} __doc/README.RPM.md
+%else
+cp -p %{SOURCE112} __doc/README.RPM.md
+%endif
+
+# Copy robot aliases.
+cp -p %{SOURCE114} %{SOURCE115} %{buildroot}%{_sysconfdir}/sympa/
+chmod 644 %{buildroot}%{_sysconfdir}/sympa/aliases.sympa.*
+
+# Create logrotate item
+mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
+install -m 0644 %{SOURCE107} %{buildroot}%{_sysconfdir}/logrotate.d/sympa
+
+# Create link to mhonarc for backward compatibility.
+ln -s %{_bindir}/mhonarc %{buildroot}%{_datadir}/sympa/bin/mhonarc
+
+
+%check
+make check
+%if 0%{?do_authorcheck}
+make authorcheck || true
+%endif
+
+
+%pre
+# Create "sympa" group if it does not exist
+getent group sympa >/dev/null || /usr/sbin/groupadd -r sympa
+
+# Create "sympa" user if it does not exist
+getent passwd sympa >/dev/null || \
+  /usr/sbin/useradd -r -g sympa \
+      -d %{_localstatedir}/lib/sympa \
+      -c "System User for Sympa" \
+      -s "/sbin/nologin" \
+      sympa
+exit 0
+
+
+%post
+# register service
+%if %{use_systemd}
+%systemd_post sympa.service
+%else
+/sbin/chkconfig --add sympa
+%endif
+
+# make etc directory and its contents writable by system user.
+chown sympa:sympa %{_sysconfdir}/sympa
+chown sympa:sympa %{_sysconfdir}/sympa/sympa.conf
+[ -e %{_sysconfdir}/sympa/data_structure.version ] && \
+    chown sympa:sympa %{_sysconfdir}/sympa/data_structure.version
+for robotdir in %{_sysconfdir}/sympa/*/; do
+    if [ -d "$robotdir" -a -f "$robotdir/robot.conf" ]; then
+        chown sympa:sympa "$robotdir"
+        chown sympa:sympa "$robotdir"/robot.conf
+    fi
+done
+
+# create cookie
+cook=%{_sysconfdir}/sympa/current_cookie.$$
+touch $cook
+chown sympa:sympa $cook
+chmod 640 $cook
+perl -ne 'chomp $_; print $1 if /^cookie\s+(\S.*)/' \
+    %{_sysconfdir}/sympa/sympa.conf > $cook
+if [ '!' -s $cook ]; then
+    if [ -e %{_sysconfdir}/sympa/cookies.history ]; then
+        cp -p %{_sysconfdir}/sympa/cookies.history $cook
+    else
+        dd if=/dev/urandom bs=2048 count=1 2>/dev/null | md5sum | \
+        cut -d" " -f1 > $cook
+    fi
+    perl -i -pe '/^#*\s*cookie\s/ and $_ = "cookie ".`cat '$cook'`."\n"' \
+        %{_sysconfdir}/sympa/sympa.conf
+fi
+rm -f $cook
+
+# create config at first time.
+if [ '!' -e %{_sysconfdir}/sympa/data_structure.version ]; then
+    ## create site configurations
+    cp -p %{_sysconfdir}/sympa/data_structure.current_version \
+        %{_sysconfdir}/sympa/data_structure.version
+    ## Hide sample ``intranet'' choices.
+    # create_list.conf
+    if [ '!' -e %{_sysconfdir}/sympa/create_list.conf ]; then
+        cp -p %{_datadir}/sympa/default/create_list.conf \
+            %{_sysconfdir}/sympa/create_list.conf
+        cd %{_datadir}/sympa/default/create_list_templates
+        for template in *intranet*; do
+            ( echo ''; echo "$template hidden" ) \
+                >> %{_sysconfdir}/sympa/create_list.conf
+        done
+    fi
+    # scenari
+    cd %{_datadir}/sympa/default/scenari
+    for scenario in *intranet*; do
+        if [ '!' -e %{_sysconfdir}/sympa/scenari/$scenario ]; then
+            touch %{_sysconfdir}/sympa/scenari/$scenario:ignore
+        fi
+    done
+    ## create sympa_aliases
+    if [ '!' -e %{_localstatedir}/lib/sympa/sympa_aliases ]; then
+        touch %{_localstatedir}/lib/sympa/sympa_aliases
+        chown sympa:sympa %{_localstatedir}/lib/sympa/sympa_aliases
+        chmod 640 %{_localstatedir}/lib/sympa/sympa_aliases
+    fi
+fi
+
+# reload rsyslog
+if [ "$1" = 1 ]; then
+%if %{use_systemd}
+/bin/systemctl restart rsyslog.service    
+%else
+/sbin/service rsyslog condrestart
+%endif
+fi
+
+if [ "$1" = 1 ]; then
+    echo ============================================================
+    echo Sympa had been installed successfully.  If you installed
+    echo Sympa at first time, please read:
+    echo %{_docdir}/%{name}-%{version}/README.RPM.md
+    echo ============================================================
+elif [ "$1" -ge 1 ]; then
+    if [ -e %{_localstatedir}/lock/subsys/sympa ]; then
+        /sbin/service sympa stop > /dev/null 2>&1
+        rm -f %{_sysconfdir}/sympa/sympa.conf.bin > /dev/null 2>&1
+        if %{_sbindir}/sympa.pl --upgrade > /dev/null 2>&1; then
+            /sbin/service sympa start > /dev/null 2>&1
+        else
+            echo ============================================================
+            echo Notice: Failed upgrading data structure.  See logfile.
+            echo Sympa is stopped.
+            echo ============================================================
+        fi
+    else
+        rm -f %{_sysconfdir}/sympa/sympa.conf.bin > /dev/null 2>&1
+        if %{_sbindir}/sympa.pl --upgrade > /dev/null 2>&1; then :; else
+            echo ============================================================
+            echo Notice: Failed upgrading data structure.  See logfile.
+            echo ============================================================
+        fi
+    fi
+fi
+
+# Migrate /etc/sysconfig/sympa from previous RPM releases.
+function migrate_sysconfig_sympa {
+  [ -f %{_sysconfdir}/sysconfig/sympa ] || return
+  grep -q '^aliases_program' %{_sysconfdir}/sympa/sympa.conf && return
+  . %{_sysconfdir}/sysconfig/sympa
+
+  newaliases_program=
+
+  case "$NEWALIASES_PROGRAM" in
+  postfix)
+    newaliases_program=postalias
+    ;;
+  postfix-postmap|postmap)
+    newaliases_program=postmap
+    ;;
+  sendmail|newaliases)
+    newaliases_program=newaliases
+    ;;
+  sendmail-makemap|makemap)
+    newaliases_program=makemap
+    ;;
+  *)
+    newaliases_program="$NEWALIASES_PROGRAM"
+    ;;
+  esac
+  [ "x$newaliases_program" = "x" ] && return
+
+  (
+    echo ''
+    echo '# Migrated from %{_sysconfdir}/sysconfig/sympa'
+    echo "aliases_program $newaliases_program"
+  ) >> %{_sysconfdir}/sympa/sympa.conf
+
+  echo ========================================================================
+  echo 'NEWALIASES_PROGRAM in %{_sysconfdir}/sysconfig/sympa is no longer used.'
+  echo 'Use aliases_program in %{_sysconfdir}/sympa/sympa.conf.'
+  echo ========================================================================
+}
+
+if [ "$1" -gt "1" ]; then
+  migrate_sysconfig_sympa
+fi
+
+
+%post nginx
+# register service
+%if %{use_systemd}
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%else
+/sbin/chkconfig --add wwsympa
+%endif
+if [ -e %{_localstatedir}/lock/subsys/wwsympa ]; then
+    /sbin/service wwsympa restart
+fi
+
+
+%preun
+%if %{use_systemd}
+%systemd_preun sympa.service
+%else
+if [ $1 -eq 0 ] ; then
+    /sbin/service sympa stop >/dev/null 2>&1
+    /sbin/chkconfig --del sympa
+fi
+%endif
+
+
+%preun nginx
+%if %{use_systemd}
+%systemd_preun wwsympa.service
+%else
+if [ $1 -eq 0 ] ; then
+    /sbin/service wwsympa stop >/dev/null 2>&1
+    /sbin/chkconfig --del wwsympa
+fi
+%endif
+
+
+%postun httpd
+%if %{use_systemd}
+%systemd_postun_with_restart httpd.service
+%else
+/sbin/service httpd condrestart
+%endif
+
+
+%postun lighttpd
+%if %{use_systemd}
+%systemd_postun_with_restart lighttpd.service
+%else
+/sbin/service lighttpd condrestart
+%endif
+
+
+%postun nginx
+%if %{use_systemd}
+%systemd_postun_with_restart nginx.service
+%else
+/sbin/service nginx condrestart
+%endif
+
+
+%files -f %{name}.lang
+%defattr(-,root,root)
+%doc __doc/*
+#%license COPYING
+%attr(-,sympa,sympa) %{_localstatedir}/*/sympa
+%{_sbindir}/*
+%dir %{_libexecdir}/sympa
+%attr(4755,sympa,sympa) %{_libexecdir}/sympa/bouncequeue
+%attr(4755,sympa,sympa) %{_libexecdir}/sympa/familyqueue
+%attr(4755,sympa,sympa) %{_libexecdir}/sympa/queue
+%attr(4750,root,sympa) %{_libexecdir}/sympa/sympa_newaliases-wrapper
+%attr(0750,sympa,sympa) %{_libexecdir}/sympa/sympa_smtpc
+%{_mandir}/man1/*
+%{_mandir}/man3/*
+%{_mandir}/man5/*
+%{_mandir}/man8/*
+%{_datadir}/sympa
+%config(noreplace) %{_sysconfdir}/logrotate.d/sympa
+%{_sysconfdir}/smrsh/*
+%config(noreplace) %{_sysconfdir}/rsyslog.d/*
+%dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa
+%config(noreplace,missingok) %attr(444,root,root) %{_sysconfdir}/sympa/README
+%config(noreplace) %attr(0640,sympa,sympa) %{_sysconfdir}/sympa/sympa.conf
+%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail
+%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix
+%config(missingok) %{_sysconfdir}/sympa/create_list_templates
+%config(missingok) %{_sysconfdir}/sympa/custom_actions
+%config(missingok) %{_sysconfdir}/sympa/custom_conditions
+%config(missingok) %{_sysconfdir}/sympa/data_sources
+%config(missingok) %{_sysconfdir}/sympa/data_structure.current_version
+%config(missingok) %{_sysconfdir}/sympa/families
+%config(missingok) %{_sysconfdir}/sympa/global_task_models
+%config(missingok) %{_sysconfdir}/sympa/list_task_models
+%config(missingok) %{_sysconfdir}/sympa/search_filters
+%config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/mail_tt2
+%config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/scenari
+%config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/web_tt2
+%if %{use_systemd}
+%{_unitdir}/sympa.service
+%{_unitdir}/sympa-outgoing.service
+%{_unitdir}/sympa-archive.service
+%{_unitdir}/sympa-bounce.service
+%{_unitdir}/sympa-task.service
+%{_tmpfilesdir}/sympa.conf
+%dir %{_sysconfdir}/systemd/system/sympa.service.d
+%config(noreplace) %{_sysconfdir}/systemd/system/sympa.service.d/*
+%else
+%{_initrddir}/sympa
+%endif
+
+
+%files httpd -f web_help.lang
+%defattr(-,root,root)
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/sympa.conf
+%attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
+%{_libexecdir}/sympa/sympa_soap_server.fcgi
+%attr(6755,sympa,sympa) %{_libexecdir}/sympa/wwsympa-wrapper.fcgi
+%{_libexecdir}/sympa/wwsympa.fcgi
+
+
+%files lighttpd -f web_help.lang
+%defattr(-,root,root)
+%config(noreplace) %{_sysconfdir}/lighttpd/sympa.conf
+%attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
+%{_libexecdir}/sympa/sympa_soap_server.fcgi
+%attr(6755,sympa,sympa) %{_libexecdir}/sympa/wwsympa-wrapper.fcgi
+%{_libexecdir}/sympa/wwsympa.fcgi
+
+
+%files nginx -f web_help.lang
+%defattr(-,root,root)
+%config(noreplace) %{_sysconfdir}/nginx/conf.d/sympa.conf
+%{_libexecdir}/sympa/sympa_soap_server.fcgi
+%{_libexecdir}/sympa/wwsympa.fcgi
+%if %{use_systemd}
+%{_unitdir}/wwsympa.service
+%{_unitdir}/sympasoap.service
+%else
+%{_initrddir}/wwsympa
+%{_initrddir}/sympasoap
+%endif
+
+
+%changelog
+* Sun Jun 25 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.18-1
+- Updated.
+
+
+* Thu Jun 15 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.17b.2-1
+- Updated README.RPM.md.
+
+
+* Sun Aug 07 2016 IKEDA Soji <ikeda@conversion.co.jp> 6.2.17-1
+- Typos in el6-README.RPM.
+- Added a build dependency perl(Test::Harness).
+- Added a dependency perl(Unicode::Normalize).
+- Added a definition parameter %{do_autoreconf}.
+
+
+* Sat Jun 18 2016 IKEDA Soji <ikeda@conversion.co.jp> 6.2.16-1
+- Adopted adjustment to Fedora by Xavier Bachelot <xavier@bachelot.org>.
+- Avoiding use of buildroot macro in build section.
+- Simplified configure option.
+- Added patch14 to disable service by default.
+- Added unit customization file source129.
+
+
+* Thu Feb 26 2015 IKEDA Soji <ikeda@conversion.co.jp> 6.2-1
+- New minor release sympa-6.2.
+

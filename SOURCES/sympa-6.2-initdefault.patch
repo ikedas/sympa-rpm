@@ -1,0 +1,11 @@
+--- src/etc/script/sympa.in.defaultoff	2015-06-11 01:24:26.000000000 +0900
++++ src/etc/script/sympa.in	2016-06-11 10:47:34.757854759 +0900
+@@ -11,7 +11,7 @@
+ #    - no more sympauser since sympa sets its UID
+ # Modified by Michel Bouissou  27/07/2000
+ #
+-# chkconfig: 345 95 05
++# chkconfig: - 95 05
+ # description: Sympa is a powerful mailing list management system.
+ 
+ if [ -f --initdir--/functions ]; then
