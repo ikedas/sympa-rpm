@@ -586,20 +586,17 @@ function migrate_sysconfig_sympa {
   echo ========================================================================
 }
 
-fix_conf_and_robots_owner
-create_cookie
-create_config
-
+# Install
+if [ $1 -eq 1 ]; then
+    create_cookie
+    create_config
 # reload rsyslog
-if [ "$1" = 1 ]; then
 %if %{use_systemd}
-/bin/systemctl restart rsyslog.service
+    /bin/systemctl restart rsyslog.service
 %else
-/sbin/service rsyslog condrestart
+    /sbin/service rsyslog condrestart
 %endif
-fi
 
-if [ "$1" = 1 ]; then
     echo ============================================================
     echo Sympa had been installed successfully.  If you installed
     echo Sympa at first time, please read:
@@ -607,12 +604,11 @@ if [ "$1" = 1 ]; then
     echo ============================================================
 fi
 
-if [ "$1" -gt 1 ]; then
+# Update
+if [ $1 -gt 1 ]; then
+    fix_conf_and_robots_owner
     upgrade_data_structure
-fi
-
-if [ "$1" -gt "1" ]; then
-  migrate_sysconfig_sympa
+    migrate_sysconfig_sympa
 fi
 
 
