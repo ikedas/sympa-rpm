@@ -463,23 +463,26 @@ function fix_conf_and_robots_owner {
 fix_conf_and_robots_owner
 
 # create cookie
-cook=%{_sysconfdir}/sympa/current_cookie.$$
-touch $cook
-chown sympa:sympa $cook
-chmod 640 $cook
-perl -ne 'chomp $_; print $1 if /^cookie\s+(\S.*)/' \
-    %{_sysconfdir}/sympa/sympa.conf > $cook
-if [ '!' -s $cook ]; then
-    if [ -e %{_sysconfdir}/sympa/cookies.history ]; then
-        cp -p %{_sysconfdir}/sympa/cookies.history $cook
-    else
-        dd if=/dev/urandom bs=2048 count=1 2>/dev/null | md5sum | \
-        cut -d" " -f1 > $cook
+function create_cookie {
+    cook=%{_sysconfdir}/sympa/current_cookie.$$
+    touch $cook
+    chown sympa:sympa $cook
+    chmod 640 $cook
+    perl -ne 'chomp $_; print $1 if /^cookie\s+(\S.*)/' \
+        %{_sysconfdir}/sympa/sympa.conf > $cook
+    if [ '!' -s $cook ]; then
+        if [ -e %{_sysconfdir}/sympa/cookies.history ]; then
+            cp -p %{_sysconfdir}/sympa/cookies.history $cook
+        else
+            dd if=/dev/urandom bs=2048 count=1 2>/dev/null | md5sum | \
+            cut -d" " -f1 > $cook
+        fi
+        perl -i -pe '/^#*\s*cookie\s/ and $_ = "cookie ".`cat '$cook'`."\n"' \
+            %{_sysconfdir}/sympa/sympa.conf
     fi
-    perl -i -pe '/^#*\s*cookie\s/ and $_ = "cookie ".`cat '$cook'`."\n"' \
-        %{_sysconfdir}/sympa/sympa.conf
-fi
-rm -f $cook
+    rm -f $cook
+}
+create_cookie
 
 # create config at first time.
 if [ '!' -e %{_sysconfdir}/sympa/data_structure.version ]; then
