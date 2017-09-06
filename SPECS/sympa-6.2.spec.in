@@ -596,6 +596,7 @@ fi
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 %else
 /sbin/chkconfig --add wwsympa
+/sbin/chkconfig --add sympasoap
 %endif
 if [ -e %{_localstatedir}/lock/subsys/wwsympa ]; then
     /sbin/service wwsympa restart
@@ -616,10 +617,13 @@ fi
 %preun nginx
 %if %{use_systemd}
 %systemd_preun wwsympa.service
+%systemd_preun sympasoap.service
 %else
 if [ $1 -eq 0 ] ; then
     /sbin/service wwsympa stop >/dev/null 2>&1
+    /sbin/service sympasoap stop >/dev/null 2>&1
     /sbin/chkconfig --del wwsympa
+    /sbin/chkconfig --del sympasoap
 fi
 %endif
 
