@@ -7,9 +7,9 @@
 Name:        sympa
 Version:     @VERSION@
 Release:     1@REV@%{?dist}
+Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
-Summary:     Powerful multilingual List Manager
 License:     GPLv2+
 Group:       System Environment/Daemons
 URL:         http://www.sympa.org
@@ -207,9 +207,9 @@ BuildRequires: perl(Test::Pod::Spelling::CommonMistakes)
 
 
 %package httpd
+Summary:  Sympa with Apache HTTP Server
 Summary(fr): Sympa avec Serveur HTTP Apache
 Summary(ja): SympaのApache HTTP Server対応
-Summary:  Sympa with Apache HTTP Server
 Group:    System Environment/Daemons
 
 AutoReqProv: no
@@ -226,9 +226,9 @@ Conflicts: %{name}-lighttpd, %{name}-nginx
 
 
 %package lighttpd
+Summary:  Sympa with lighttpd
 Summary(fr): Sympa avec lighttpd
 Summary(ja): Sympaのlighttpd対応
-Summary:  Sympa with lighttpd
 Group:    System Environment/Daemons
 
 AutoReqProv: no
@@ -245,9 +245,9 @@ Conflicts: %{name}-httpd, %{name}-nginx
 
 
 %package nginx
+Summary:  Sympa with nginx
 Summary(fr): Sympa avec nginx
 Summary(ja): Sympaのnginx対応
-Summary:  Sympa with nginx
 Group:    System Environment/Daemons
 
 AutoReqProv: no
@@ -263,16 +263,6 @@ Requires: perl(SOAP::Lite) >= 0.712
 Conflicts: %{name}-httpd, %{name}-lighttpd
 
 
-
-%description -l ja
-Sympa はスケーラブルで高いカスタマイズ性を持つメーリングリスト管理
-ソフトウェアです。巨大なリスト (登録者数 200,000) にも適用でき、完
-全な (一般ユーザ用および管理者用) ウェブインタフェースをそなえてい
-ます。国際化されており、多数の言語に対応します。内蔵のスクリプティ
-ング言語でコマンドの動作を拡張できます。Sympa はまた、LDAP ディレ
-クトリや RDBMS と連携して動的なメーリングリストを作成できます。ま
-た、S/MIME に基づく認証や暗号化もできます。
-
 %description
 Sympa is scalable and highly customizable mailing list manager. It
 can cope with big lists (200,000 subscribers) and comes with a
@@ -283,26 +273,35 @@ Sympa can be linked to an LDAP directory or an RDBMS to create
 dynamic mailing lists. Sympa provides S/MIME-based authentication
 and encryption.
 
+%description -l ja
+Sympa はスケーラブルで高いカスタマイズ性を持つメーリングリスト管理
+ソフトウェアです。巨大なリスト (登録者数 200,000) にも適用でき、完
+全な (一般ユーザ用および管理者用) ウェブインタフェースをそなえてい
+ます。国際化されており、多数の言語に対応します。内蔵のスクリプティ
+ング言語でコマンドの動作を拡張できます。Sympa はまた、LDAP ディレ
+クトリや RDBMS と連携して動的なメーリングリストを作成できます。ま
+た、S/MIME に基づく認証や暗号化もできます。
 
-%description httpd -l ja
-Sympa の Apache HTTP Server 対応。
 
 %description httpd
 Apache HTTP Server support for Sympa.
 
+%description httpd -l ja
+Sympa の Apache HTTP Server 対応。
 
-%description lighttpd -l ja
-Sympa の lighttpd 対応。
 
 %description lighttpd
 lighttpd support for Sympa.
 
+%description lighttpd -l ja
+Sympa の lighttpd 対応。
 
-%description nginx -l ja
-Sympa の nginx 対応。
 
 %description nginx
 nginx support for Sympa.
+
+%description nginx -l ja
+Sympa の nginx 対応。
 
 
 %prep
