@@ -579,11 +579,6 @@ function migrate_sysconfig_sympa {
     echo '# Migrated from %{_sysconfdir}/sysconfig/sympa'
     echo "aliases_program $newaliases_program"
   ) >> %{_sysconfdir}/sympa/sympa.conf
-
-  echo ========================================================================
-  echo 'NEWALIASES_PROGRAM in %{_sysconfdir}/sysconfig/sympa is no longer used.'
-  echo 'Use aliases_program in %{_sysconfdir}/sympa/sympa.conf.'
-  echo ========================================================================
 }
 
 # Install
@@ -596,12 +591,6 @@ if [ $1 -eq 1 ]; then
 %else
     /sbin/service rsyslog condrestart
 %endif
-
-    echo ============================================================
-    echo Sympa had been installed successfully.  If you installed
-    echo Sympa at first time, please read:
-    echo %{_docdir}/%{name}-%{version}/README.RPM.md
-    echo ============================================================
 fi
 
 # Update
