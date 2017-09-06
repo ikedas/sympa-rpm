@@ -36,88 +36,6 @@ Patch13:     sympa-6.2.19b.1-confdef.patch
 Patch14:     sympa-6.2-initdefault.patch
 @Patch1xx@
 
-AutoReqProv: no
-
-Requires(pre): shadow-utils
-
-%if ! %{use_systemd}
-Requires(post):   chkconfig
-Requires(preun):  chkconfig
-Requires(preun):  initscripts
-Requires(postun): initscripts
-%endif
-
-Requires:    smtpdaemon
-# requires this release or later (fixed memory leak in POSIX::strftime()).
-Requires: perl >= 4:5.10.1-127
-#wwsympa#Requires: perl(Archive::Zip) >= 1.05
-Requires: perl(AuthCAS) >= 1.4
-Requires: perl(CGI) >= 3.51
-#wwsympa#Requires: perl(CGI::Fast) >= 1.08
-Requires: perl(Class::Singleton) >= 1.03
-Requires: perl(Clone) >= 0.28
-Requires: perl(Crypt::CipherSaber) >= 0.50
-Requires: perl(Crypt::OpenSSL::X509) >= 1.800.1
-Requires: perl(Crypt::SMIME) >= 0.15
-Requires: perl(Data::Password) >= 1.07
-Requires: perl(DateTime::Format::Mail) >= 0.28
-Requires: perl(DateTime::TimeZone) >= 0.59
-Requires: perl(DBD::CSV) >= 0.22
-Requires: perl(DBD::mysql) >= 4.008
-#Requires: perl(DBD::ODBC)
-#Requires: perl(DBD::Oracle) >= 1.02
-#Requires: perl(DBD::Pg) >= 2.00
-#Requires: perl(DBD::SQLite) >= 1.31
-#Requires: perl(DBD::Sybase) >= 0.90
-Requires: perl(DBI) >= 1.48
-Requires: perl(Digest::MD5) >= 2.00
-Requires: perl(Encode)
-Requires: perl(Encode::Locale) >= 1.02
-#wwsympa#Requires: perl(FCGI) >= 0.67
-Requires: perl(File::Copy::Recursive) >= 0.36
-Requires: perl(File::NFSLock)
-Requires: perl(File::Path) >= 2.08
-Requires: perl(HTML::FormatText)
-Requires: perl(HTML::StripScripts::Parser) >= 1.03
-Requires: perl(HTML::TreeBuilder)
-Requires: perl(IO::File) >= 1.10
-Requires: perl(IO::Scalar)
-Requires: perl(IO::Socket::SSL) >= 0.90
-Requires: perl(List::Util::XS) >= 1.20
-Requires: perl(Locale::Messages) >= 1.20
-Requires: perl(LWP::UserAgent)
-Requires: perl(Mail::Address) >= 1.70
-Requires: perl(Mail::DKIM::Verifier) >= 0.37
-Requires: perl(MIME::Base64) >= 3.03
-Requires: perl(MIME::Charset) >= 1.011.3
-Requires: perl(MIME::EncWords) >= 1.014
-#wwsympa#Requires: perl(MIME::Lite::HTML) >= 1.23
-Requires: perl(MIME::Tools) >= 5.423
-Requires: perl(Net::CIDR) >= 0.16
-Requires: perl(Net::DNS) >= 0.65
-Requires: perl(Net::LDAP) >= 0.40
-Requires: perl(Net::SMTP)
-#wwsympa#Requires: perl(SOAP::Lite) >= 0.712
-Requires: perl(Sys::Syslog) >= 0.03
-Requires: perl(Template) >= 2.21
-Requires: perl(Term::ProgressBar) >= 2.09
-Requires: perl(Text::LineFold) >= 2011.05
-Requires: perl(Time::HiRes) >= 1.29
-# for Perl prior to 5.16.0.
-%if 0%{?rhel} == 6
-Requires:    perl(Unicode::CaseFold)
-%endif
-Requires: perl(Unicode::Normalize) >= 0.23
-Requires: perl(URI::Escape) >= 3.28
-Requires: perl(XML::LibXML) >= 1.70
-Requires: mhonarc >= 2.6.18
-#wwsympa#Requires: webserver
-
-# Recommended for handling Japanese vendor codepages.
-Requires: perl(Encode::EUCJPASCII) >= 0.02
-# Handling several Chinese standards.
-Requires: perl(Encode::HanExtra) >= 0.20
-
 BuildRequires: gcc, make
 BuildRequires: gettext
 %if %{use_systemd}
@@ -129,72 +47,45 @@ BuildRequires: systemd
 BuildRequires: autoconf, automake, gettext-devel
 %endif
 
+BuildRequires: perl-generators
 # install & check
 BuildRequires: perl(Archive::Zip)
-#BuildRequires: perl(AuthCAS)
-BuildRequires: perl(CGI)
-#BuildRequires: perl(CGI::Fast)
-BuildRequires: perl(Class::Singleton)
-BuildRequires: perl(Clone) >= 0.28
-#BuildRequires: perl(Crypt::CipherSaber)
-#BuildRequires: perl(Crypt::OpenSSL::X509)
-#BuildRequires: perl(Crypt::SMIME)
-#BuildRequires: perl(Data::Password)
+BuildRequires: perl(CGI::Cookie)
+BuildRequires: perl(CGI::Util)
+BuildRequires: perl(Data::Password)
+BuildRequires: perl(DateTime)
 BuildRequires: perl(DateTime::Format::Mail)
-BuildRequires: perl(DateTime::TimeZone)
-#BuildRequires: perl(DBD::CSV)
-#BuildRequires: perl(DBD::mysql)
-#BuildRequires: perl(DBD::ODBC)
-#BuildRequires: perl(DBD::Oracle)
-#BuildRequires: perl(DBD::Pg)
-#BuildRequires: perl(DBD::SQLite)
-#BuildRequires: perl(DBD::Sybase)
 BuildRequires: perl(DBI)
-BuildRequires: perl(Digest::MD5)
-BuildRequires: perl(Encode)
-#BuildRequires: perl(Encode::Locale)
-#BuildRequires: perl(FCGI)
 BuildRequires: perl(File::Copy::Recursive)
 BuildRequires: perl(File::NFSLock)
-BuildRequires: perl(File::Path)
+BuildRequires: perl(HTML::Entities)
 BuildRequires: perl(HTML::FormatText)
 BuildRequires: perl(HTML::StripScripts::Parser)
 BuildRequires: perl(HTML::TreeBuilder)
-BuildRequires: perl(IO::File)
 BuildRequires: perl(IO::Scalar)
-#BuildRequires: perl(IO::Socket::SSL)
-BuildRequires: perl(List::Util::XS)
 BuildRequires: perl(Locale::Messages)
-BuildRequires: perl(LWP::UserAgent)
-BuildRequires: perl(Mail::Address)
-#BuildRequires: perl(Mail::DKIM::Verifier)
-BuildRequires: perl(MIME::Base64)
 BuildRequires: perl(MIME::Charset)
 BuildRequires: perl(MIME::EncWords)
 BuildRequires: perl(MIME::Lite::HTML)
-BuildRequires: perl(MIME::Tools)
+BuildRequires: perl(MIME::Parser)
 BuildRequires: perl(Net::CIDR)
-#BuildRequires: perl(Net::DNS)
 BuildRequires: perl(Net::LDAP)
-#BuildRequires: perl(Net::SMTP)
 BuildRequires: perl(SOAP::Lite)
+BuildRequires: perl(SOAP::Transport::HTTP)
 BuildRequires: perl(Sys::Syslog)
 BuildRequires: perl(Template)
 BuildRequires: perl(Term::ProgressBar)
+BuildRequires: perl(Test::Compile)
+BuildRequires: perl(Test::Harness)
+BuildRequires: perl(Test::More)
+BuildRequires: perl(Test::Pod)
 BuildRequires: perl(Text::LineFold)
 BuildRequires: perl(Time::HiRes)
 # For Perl prior to 5.16.0.
 %if 0%{?rhel} == 6
 BuildRequires: perl(Unicode::CaseFold)
 %endif
-BuildRequires: perl(Unicode::Normalize) >= 0.23
-BuildRequires: perl(URI::Escape)
 BuildRequires: perl(XML::LibXML)
-
-BuildRequires: perl(Test::Compile)
-BuildRequires: perl(Test::Harness)
-BuildRequires: perl(Test::More)
-BuildRequires: perl(Test::Pod)
 
 # authorcheck
 %if 0%{?do_authorcheck}
@@ -204,22 +95,55 @@ BuildRequires: perl(Test::Pod::Coverage)
 BuildRequires: perl(Test::Pod::Spelling::CommonMistakes)
 %endif
 
+Requires(pre): shadow-utils
+
+%if ! %{use_systemd}
+Requires(post):   chkconfig
+Requires(preun):  chkconfig
+Requires(preun):  initscripts
+Requires(postun): initscripts
+%endif
+
+Requires:    smtpdaemon
+Requires:    mhonarc
+Requires:    perl(DBD::mysql)
+Requires:    perl(HTML::FormatText)
+Requires:    perl(HTML::StripScripts::Parser)
+
+# Optional CPAN packages
+Requires:    perl(AuthCAS)
+Requires:    perl(Crypt::CipherSaber)
+Requires:    perl(Crypt::OpenSSL::X509)
+Requires:    perl(Crypt::SMIME)
+Requires:    perl(Data::Password)
+Requires:    perl(DateTime::TimeZone)
+Requires:    perl(DBD::CSV)
+Requires:    perl(Encode::Locale)
+# Recommended for handling Japanese vendor codepages.
+Requires:    perl(Encode::EUCJPASCII)
+# Handling several Chinese standards.
+Requires:    perl(Encode::HanExtra)
+Requires:    perl(IO::Socket::SSL)
+Requires:    perl(List::Util::XS)
+Requires:    perl(Mail::DKIM::Verifier)
+Requires:    perl(Net::DNS)
+Requires:    perl(Net::SMTP)
+# for Perl prior to 5.16.0.
+%if 0%{?rhel} == 6
+Requires:    perl(Unicode::CaseFold)
+%endif
+
 
 %package httpd
 Summary:  Sympa with Apache HTTP Server
 Summary(fr): Sympa avec Serveur HTTP Apache
 Summary(ja): SympaのApache HTTP Server対応
 
-AutoReqProv: no
-
 Requires: %{name} = %{version}-%{release}
 Requires: httpd
 Requires: mod_fcgid
-Requires: perl(Archive::Zip) >= 1.05
-Requires: perl(CGI::Fast) >= 1.08
-Requires: perl(FCGI) >= 0.67
-Requires: perl(MIME::Lite::HTML) >= 1.23
-Requires: perl(SOAP::Lite) >= 0.712
+Requires: perl(CGI::Fast)
+Requires: perl(FCGI)
 Conflicts: %{name}-lighttpd, %{name}-nginx
 
 
@@ -228,16 +152,11 @@ Summary:  Sympa with lighttpd
 Summary(fr): Sympa avec lighttpd
 Summary(ja): Sympaのlighttpd対応
 
-AutoReqProv: no
-
 Requires: %{name} = %{version}-%{release}
 Requires: lighttpd
 Requires: lighttpd-fastcgi
-Requires: perl(Archive::Zip) >= 1.05
-Requires: perl(CGI::Fast) >= 1.08
-Requires: perl(FCGI) >= 0.67
-Requires: perl(MIME::Lite::HTML) >= 1.23
-Requires: perl(SOAP::Lite) >= 0.712
+Requires: perl(CGI::Fast)
+Requires: perl(FCGI)
 Conflicts: %{name}-httpd, %{name}-nginx
 
 
@@ -246,17 +165,24 @@ Summary:  Sympa with nginx
 Summary(fr): Sympa avec nginx
 Summary(ja): Sympaのnginx対応
 
-AutoReqProv: no
-
 Requires: %{name} = %{version}-%{release}
 Requires: nginx
 Requires: spawn-fcgi
-Requires: perl(Archive::Zip) >= 1.05
-Requires: perl(CGI::Fast) >= 1.08
-Requires: perl(FCGI) >= 0.67
-Requires: perl(MIME::Lite::HTML) >= 1.23
-Requires: perl(SOAP::Lite) >= 0.712
+Requires: perl(CGI::Fast)
+Requires: perl(FCGI)
 Conflicts: %{name}-httpd, %{name}-lighttpd
+
+%if 0%{?fedora} || 0%{?rhel} >= 7
+%{?perl_default_filter}
+%global __requires_exclude perl\\(Conf\\)
+%global __provides_exclude perl\\(Conf\\)
+%endif
+
+%if 0%{?rhel} == 6
+%filter_from_provides /perl(Conf)/d
+%filter_from_requires /perl(Conf)/d
+%filter_setup
+%endif
 
 
 %description
