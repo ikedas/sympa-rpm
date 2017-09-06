@@ -512,7 +512,7 @@ fi
 # reload rsyslog
 if [ "$1" = 1 ]; then
 %if %{use_systemd}
-/bin/systemctl restart rsyslog.service    
+/bin/systemctl restart rsyslog.service
 %else
 /sbin/service rsyslog condrestart
 %endif
