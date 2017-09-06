@@ -335,6 +335,7 @@ export PATH
 %endif
     --with-smrshdir=%{_sysconfdir}/smrsh \
     --with-aliases_file=%{_localstatedir}/lib/sympa/sympa_aliases \
+    --with-perl=%{_bindir}/perl \
     INSTALL_DATA='install -c -p -m 644'
 make %{?_smp_mflags}
 
