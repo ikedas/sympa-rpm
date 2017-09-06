@@ -307,13 +307,13 @@ Sympa の nginx 対応。
 %patch13 -p0 -b .confdef
 %patch14 -p0 -b .initdefault
 
+
+%build
 # Development
 %if 0%{?do_autoreconf}
 autoreconf --install
 %endif
 
-
-%build
 PATH=/bin:/usr/bin
 export PATH
 # Give install "-p" preserving mtime to prevent unexpected update of CSS.
