@@ -405,9 +405,6 @@ chmod 644 %{buildroot}%{_sysconfdir}/sympa/aliases.sympa.*
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
 install -m 0644 %{SOURCE107} %{buildroot}%{_sysconfdir}/logrotate.d/sympa
 
-# Create link to mhonarc for backward compatibility.
-ln -s %{_bindir}/mhonarc %{buildroot}%{_datadir}/sympa/bin/mhonarc
-
 
 %check
 %if ! 0%{?fedora}
