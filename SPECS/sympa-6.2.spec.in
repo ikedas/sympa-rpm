@@ -536,24 +536,34 @@ if [ "$1" = 1 ]; then
 fi
 
 function upgrade_data_structure {
+    # Stop sympa if it is running
+%if %{use_systemd}
+    if systemctl is-active sympa > /dev/null 2>&1; then
+        /usr/bin/systemctl stop sympa > /dev/null 2>&1
+        ACTIVE="yes"
+    fi
+%else
     if [ -e %{_localstatedir}/lock/subsys/sympa ]; then
         /sbin/service sympa stop > /dev/null 2>&1
-        rm -f %{_sysconfdir}/sympa/sympa.conf.bin > /dev/null 2>&1
-        if %{_sbindir}/sympa.pl --upgrade > /dev/null 2>&1; then
+        ACTIVE="yes"
+    fi
+%endif
+    # Upgrade
+    rm -f %{_sysconfdir}/sympa/sympa.conf.bin > /dev/null 2>&1
+    if %{_sbindir}/sympa.pl --upgrade > /dev/null 2>&1; then
+        # Start sympa if it was running previously
+        if [ $ACTIVE == "yes" ]; then
+%if %{use_systemd}
+            /usr/bin/systemctl start sympa > /dev/null 2>&1
+%else
             /sbin/service sympa start > /dev/null 2>&1
-        else
-            echo ============================================================
-            echo Notice: Failed upgrading data structure.  See logfile.
-            echo Sympa is stopped.
-            echo ============================================================
+%endif
         fi
     else
-        rm -f %{_sysconfdir}/sympa/sympa.conf.bin > /dev/null 2>&1
-        if %{_sbindir}/sympa.pl --upgrade > /dev/null 2>&1; then :; else
-            echo ============================================================
-            echo Notice: Failed upgrading data structure.  See logfile.
-            echo ============================================================
-        fi
+        echo ============================================================
+        echo Notice: Failed upgrading data structure.  See logfile.
+        echo Sympa is stopped.
+        echo ============================================================
     fi
 }
 
