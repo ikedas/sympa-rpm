@@ -485,35 +485,38 @@ function create_cookie {
 create_cookie
 
 # create config at first time.
-if [ '!' -e %{_sysconfdir}/sympa/data_structure.version ]; then
-    ## create site configurations
-    cp -p %{_sysconfdir}/sympa/data_structure.current_version \
-        %{_sysconfdir}/sympa/data_structure.version
-    ## Hide sample ``intranet'' choices.
-    # create_list.conf
-    if [ '!' -e %{_sysconfdir}/sympa/create_list.conf ]; then
-        cp -p %{_datadir}/sympa/default/create_list.conf \
-            %{_sysconfdir}/sympa/create_list.conf
-        cd %{_datadir}/sympa/default/create_list_templates
-        for template in *intranet*; do
-            ( echo ''; echo "$template hidden" ) \
-                >> %{_sysconfdir}/sympa/create_list.conf
-        done
-    fi
-    # scenari
-    cd %{_datadir}/sympa/default/scenari
-    for scenario in *intranet*; do
-        if [ '!' -e %{_sysconfdir}/sympa/scenari/$scenario ]; then
-            touch %{_sysconfdir}/sympa/scenari/$scenario:ignore
+function create_config {
+    if [ '!' -e %{_sysconfdir}/sympa/data_structure.version ]; then
+        ## create site configurations
+        cp -p %{_sysconfdir}/sympa/data_structure.current_version \
+            %{_sysconfdir}/sympa/data_structure.version
+        ## Hide sample ``intranet'' choices.
+        # create_list.conf
+        if [ '!' -e %{_sysconfdir}/sympa/create_list.conf ]; then
+            cp -p %{_datadir}/sympa/default/create_list.conf \
+                %{_sysconfdir}/sympa/create_list.conf
+            cd %{_datadir}/sympa/default/create_list_templates
+            for template in *intranet*; do
+                ( echo ''; echo "$template hidden" ) \
+                    >> %{_sysconfdir}/sympa/create_list.conf
+            done
         fi
-    done
-    ## create sympa_aliases
-    if [ '!' -e %{_localstatedir}/lib/sympa/sympa_aliases ]; then
-        touch %{_localstatedir}/lib/sympa/sympa_aliases
-        chown sympa:sympa %{_localstatedir}/lib/sympa/sympa_aliases
-        chmod 640 %{_localstatedir}/lib/sympa/sympa_aliases
+        # scenari
+        cd %{_datadir}/sympa/default/scenari
+        for scenario in *intranet*; do
+            if [ '!' -e %{_sysconfdir}/sympa/scenari/$scenario ]; then
+                touch %{_sysconfdir}/sympa/scenari/$scenario:ignore
+            fi
+        done
+        ## create sympa_aliases
+        if [ '!' -e %{_localstatedir}/lib/sympa/sympa_aliases ]; then
+            touch %{_localstatedir}/lib/sympa/sympa_aliases
+            chown sympa:sympa %{_localstatedir}/lib/sympa/sympa_aliases
+            chmod 640 %{_localstatedir}/lib/sympa/sympa_aliases
+        fi
     fi
-fi
+}
+create_config
 
 # reload rsyslog
 if [ "$1" = 1 ]; then
