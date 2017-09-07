@@ -511,12 +511,6 @@ function migrate_sysconfig_sympa {
 if [ $1 -eq 1 ]; then
     create_cookie
     create_config
-# reload rsyslog
-%if %{use_systemd}
-    /bin/systemctl restart rsyslog.service
-%else
-    /sbin/service rsyslog condrestart
-%endif
 fi
 
 # Update
