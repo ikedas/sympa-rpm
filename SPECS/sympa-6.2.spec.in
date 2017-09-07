@@ -655,7 +655,7 @@ fi
 
 
 %changelog
-* Sun Aug 19 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.19b.1-1
+* Sat Aug 19 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.19b.1-1
 - Added --bindir to install sympa_smtpc under libexecdir.
 
 
