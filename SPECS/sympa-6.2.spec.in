@@ -530,14 +530,12 @@ fi
 %post nginx
 # register service
 %if %{use_systemd}
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%systemd_post wwsympa.service
+%systemd_post sympasoap.service
 %else
 /sbin/chkconfig --add wwsympa
 /sbin/chkconfig --add sympasoap
 %endif
-if [ -e %{_localstatedir}/lock/subsys/wwsympa ]; then
-    /sbin/service wwsympa restart
-fi
 
 
 %preun
@@ -577,9 +575,13 @@ fi
 
 %postun nginx
 %if %{use_systemd}
-%systemd_postun_with_restart nginx.service
+%systemd_postun_with_restart wwsympa.service
+%systemd_postun_with_restart sympasoap.service
 %else
-/sbin/service nginx condrestart
+if [ "$1" -ge "1" ] ; then
+    /sbin/service wwsympa condrestart >/dev/null 2>&1 || :
+    /sbin/service sympasoap condrestart >/dev/null 2>&1 || :
+fi
 %endif
 
 
