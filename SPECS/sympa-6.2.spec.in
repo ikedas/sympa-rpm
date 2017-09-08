@@ -4,16 +4,18 @@
 %global use_systemd 0
 %endif
 
+%global pre_rel b.1
+
 Name:        sympa
 Version:     @VERSION@
-Release:     1@REV@%{?dist}
+Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
 License:     GPLv2+
 URL:         http://www.sympa.org
 
-Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}/%{name}-%{version}.tar.gz
+Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
 Source101:   sympa-httpd-fcgid.conf
 Source102:   sympa-lighttpd.conf
@@ -230,7 +232,7 @@ Sympa の nginx 対応。
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{?pre_rel}
 @patch1xx@
 %patch5 -p0 -b .mhonarc
 %patch13 -p0 -b .confdef
