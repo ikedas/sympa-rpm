@@ -257,6 +257,7 @@ export PATH
     --sysconfdir=%{_sysconfdir}/sympa \
     --with-cgidir=%{_libexecdir}/sympa \
     --with-confdir=%{_sysconfdir}/sympa \
+    --with-piddir=%{_rundir}/sympa \
 %if %{use_systemd}
     --without-initdir \
     --with-unitsdir=%{_unitdir} \
@@ -588,7 +589,7 @@ fi
 %license COPYING
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
-%attr(-,sympa,sympa) %{_localstatedir}/run/sympa/
+%attr(-,sympa,sympa) %{_rundir}/sympa/
 %{_sbindir}/*
 %dir %{_libexecdir}/sympa/
 %attr(4755,sympa,sympa) %{_libexecdir}/sympa/bouncequeue
