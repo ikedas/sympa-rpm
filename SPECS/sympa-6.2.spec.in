@@ -591,7 +591,6 @@ fi
 %license COPYING
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
-%attr(-,sympa,sympa) %{_rundir}/sympa/
 %{_sbindir}/*
 %dir %{_libexecdir}/sympa/
 %attr(4755,sympa,sympa) %{_libexecdir}/sympa/bouncequeue
@@ -631,10 +630,12 @@ fi
 %{_unitdir}/sympa-bounce.service
 %{_unitdir}/sympa-task.service
 %{_tmpfilesdir}/sympa.conf
+%ghost %{_rundir}/sympa/
 %dir %{_sysconfdir}/systemd/system/sympa.service.d/
 %config(noreplace) %{_sysconfdir}/systemd/system/sympa.service.d/*
 %else
 %{_initrddir}/sympa
+%attr(-,sympa,sympa) %{_rundir}/sympa/
 %endif
 
 
