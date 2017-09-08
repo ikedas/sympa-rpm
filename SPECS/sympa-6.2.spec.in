@@ -681,7 +681,7 @@ fi
 - Typos in el6-README.RPM.
 - Added a build dependency perl(Test::Harness).
 - Added a dependency perl(Unicode::Normalize).
-- Added a definition parameter %{do_autoreconf}.
+- Added a definition parameter %%{do_autoreconf}.
 
 * Sat Jun 18 2016 IKEDA Soji <ikeda@conversion.co.jp> 6.2.16-1
 - Adopted adjustment to Fedora by Xavier Bachelot <xavier@bachelot.org>.
