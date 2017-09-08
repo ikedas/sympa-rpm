@@ -671,21 +671,17 @@ fi
 * Sat Aug 19 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.19b.1-1
 - Added --bindir to install sympa_smtpc under libexecdir.
 
-
 * Sun Jun 25 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.18-1
 - Updated.
 
-
 * Thu Jun 15 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.17b.2-1
 - Updated README.RPM.md.
-
 
 * Sun Aug 07 2016 IKEDA Soji <ikeda@conversion.co.jp> 6.2.17-1
 - Typos in el6-README.RPM.
 - Added a build dependency perl(Test::Harness).
 - Added a dependency perl(Unicode::Normalize).
 - Added a definition parameter %{do_autoreconf}.
-
 
 * Sat Jun 18 2016 IKEDA Soji <ikeda@conversion.co.jp> 6.2.16-1
 - Adopted adjustment to Fedora by Xavier Bachelot <xavier@bachelot.org>.
@@ -694,7 +690,5 @@ fi
 - Added patch14 to disable service by default.
 - Added unit customization file source129.
 
-
 * Thu Feb 26 2015 IKEDA Soji <ikeda@conversion.co.jp> 6.2-1
 - New minor release sympa-6.2.
-
