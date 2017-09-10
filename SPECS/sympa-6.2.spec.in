@@ -518,6 +518,12 @@ function migrate_sysconfig_sympa {
 if [ $1 -eq 1 ]; then
     create_cookie
     create_config
+
+    echo ============================================================
+    echo Sympa had been installed successfully.  If you installed
+    echo Sympa at first time, please read:
+    echo %{_docdir}/%{name}-%{version}/README.RPM.md
+    echo ============================================================
 fi
 
 # Update
