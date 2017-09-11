@@ -443,7 +443,7 @@ function create_cookie {
             dd if=/dev/urandom bs=2048 count=1 2>/dev/null | md5sum | \
             cut -d" " -f1 > $cook
         fi
-        perl -i -pe '/^#*\s*cookie\s/ and $_ = "cookie ".`cat '$cook'`."\n"' \
+        perl -i -pe '/^#cookie\s/ and $_ = "cookie ".`cat '$cook'`."\n"' \
             %{_sysconfdir}/sympa/sympa.conf
     fi
     rm -f $cook
