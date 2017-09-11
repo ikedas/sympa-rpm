@@ -4,11 +4,11 @@
 %global use_systemd 0
 %endif
 
-%global pre_rel b.1
+%global pre_rel b.2
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
