@@ -414,20 +414,6 @@ exit 0
 /sbin/chkconfig --add sympa
 %endif
 
-# make etc directory and its contents writable by system user.
-function fix_conf_and_robots_owner {
-    chown sympa:sympa %{_sysconfdir}/sympa
-    chown sympa:sympa %{_sysconfdir}/sympa/sympa.conf
-    [ -e %{_sysconfdir}/sympa/data_structure.version ] && \
-      chown sympa:sympa %{_sysconfdir}/sympa/data_structure.version
-    for robotdir in %{_sysconfdir}/sympa/*/; do
-        if [ -d "$robotdir" -a -f "$robotdir/robot.conf" ]; then
-            chown sympa:sympa "$robotdir"
-            chown sympa:sympa "$robotdir"/robot.conf
-        fi
-    done
-}
-
 # create cookie
 function create_cookie {
     cook=`mktemp`
@@ -525,7 +511,6 @@ fi
 
 # Update
 if [ $1 -gt 1 ]; then
-    fix_conf_and_robots_owner
     upgrade_data_structure
 fi
 
