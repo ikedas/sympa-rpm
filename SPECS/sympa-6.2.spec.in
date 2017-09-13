@@ -562,32 +562,13 @@ fi
 %files -f %{name}.lang
 %doc __doc/*
 %license COPYING
-%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/
-%attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
-%{_sbindir}/*
-%dir %{_libexecdir}/sympa/
-%attr(4755,sympa,sympa) %{_libexecdir}/sympa/bouncequeue
-%attr(4755,sympa,sympa) %{_libexecdir}/sympa/familyqueue
-%attr(4755,sympa,sympa) %{_libexecdir}/sympa/queue
-%attr(4750,root,sympa) %{_libexecdir}/sympa/sympa_newaliases-wrapper
-%attr(0750,sympa,sympa) %{_libexecdir}/sympa/sympa_smtpc
-%{_mandir}/man1/*
-%{_mandir}/man3/*
-%{_mandir}/man5/*
-%{_mandir}/man8/*
-%{_datadir}/sympa/
-%config(noreplace) %{_sysconfdir}/logrotate.d/sympa
-%{_sysconfdir}/smrsh/*
-%config(noreplace) %{_sysconfdir}/rsyslog.d/*
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/
+%{_sysconfdir}/sympa/README
 %config(noreplace) %attr(0640,sympa,sympa) %{_sysconfdir}/sympa/sympa.conf
-%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail
-%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix
 %config(missingok) %{_sysconfdir}/sympa/create_list_templates
 %config(missingok) %{_sysconfdir}/sympa/custom_actions
 %config(missingok) %{_sysconfdir}/sympa/custom_conditions
 %config(missingok) %{_sysconfdir}/sympa/data_sources
-%config(missingok) %{_sysconfdir}/sympa/data_structure.current_version
 %config(missingok) %{_sysconfdir}/sympa/families
 %config(missingok) %{_sysconfdir}/sympa/global_task_models
 %config(missingok) %{_sysconfdir}/sympa/list_task_models
@@ -595,7 +576,27 @@ fi
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/mail_tt2
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/scenari
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/web_tt2
-%{_sysconfdir}/sympa/README
+%config(missingok) %{_sysconfdir}/sympa/data_structure.current_version
+%config(noreplace) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/aliases
+%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail
+%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix
+%{_sysconfdir}/smrsh/*
+%config(noreplace) %{_sysconfdir}/rsyslog.d/*
+%config(noreplace) %{_sysconfdir}/logrotate.d/sympa
+%{_sbindir}/*
+%dir %{_libexecdir}/sympa/
+%attr(4755,sympa,sympa) %{_libexecdir}/sympa/bouncequeue
+%attr(4755,sympa,sympa) %{_libexecdir}/sympa/familyqueue
+%attr(4755,sympa,sympa) %{_libexecdir}/sympa/queue
+%attr(4750,root,sympa) %{_libexecdir}/sympa/sympa_newaliases-wrapper
+%attr(0750,sympa,sympa) %{_libexecdir}/sympa/sympa_smtpc
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/
+%attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
+%{_datadir}/sympa/
+%{_mandir}/man1/*
+%{_mandir}/man3/*
+%{_mandir}/man5/*
+%{_mandir}/man8/*
 %if %{use_systemd}
 %{_unitdir}/sympa.service
 %{_unitdir}/sympa-outgoing.service
