@@ -277,7 +277,7 @@ export PATH
     --with-aliases_file=%{_localstatedir}/lib/sympa/sympa_aliases \
     --with-perl=%{_bindir}/perl \
     INSTALL_DATA='install -c -p -m 644'
-make %{?_smp_mflags}
+%make_build
 
 # cancel workaround in Makefile getting previous version.
 rm -f previous_sympa_version
@@ -287,7 +287,7 @@ pushd po/web_help; rm -f stamp-po; make; popd
 
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install
 
 %find_lang %{name}
 %find_lang web_help
