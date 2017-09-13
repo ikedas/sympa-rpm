@@ -25,8 +25,8 @@ Source104:   sympa-nginx-wwsympa-6.2.init
 Source105:   sympa-nginx-sympasoap-6.2.init
 Source106:   sympa-rsyslog.conf
 Source107:   sympa-logrotate.conf
-Source112:   sympa-6.2.18-el6-README.RPM.md
-Source113:   sympa-6.2.18-el7-README.RPM.md
+Source112:   sympa-sysvinit-README.RPM.md
+Source113:   sympa-systemd-README.RPM.md
 Source114:   aliases.sympa.sendmail
 Source115:   aliases.sympa.postfix
 Source129:   sympa.service.d-dependencies.conf
