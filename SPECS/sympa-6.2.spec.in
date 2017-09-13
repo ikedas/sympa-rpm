@@ -339,6 +339,18 @@ cp -p %{SOURCE113} __doc/README.RPM.md
 %else
 cp -p %{SOURCE112} __doc/README.RPM.md
 %endif
+mv %{buildroot}%{_sysconfdir}/sympa/README __doc/
+%if 0%{?el6}%{?el7}
+ln -s %{_datadir}/doc/%{name}-%{version}/README \
+    %{buildroot}/%{_sysconfdir}/sympa/README
+ln -s %{_datadir}/doc/%{name}-%{version}/README \
+    %{buildroot}/%{_datadir}/sympa/default/README
+%else
+ln -s %{_datadir}/doc/%{name}/README \
+    %{buildroot}/%{_sysconfdir}/sympa/README
+ln -s %{_datadir}/doc/%{name}/README \
+    %{buildroot}/%{_datadir}/sympa/default/README
+%endif
 
 # Copy robot aliases.
 cp -p %{SOURCE114} %{SOURCE115} %{buildroot}%{_sysconfdir}/sympa/
@@ -629,7 +641,6 @@ fi
 %{_sysconfdir}/smrsh/*
 %config(noreplace) %{_sysconfdir}/rsyslog.d/*
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/
-%config(noreplace,missingok) %attr(444,root,root) %{_sysconfdir}/sympa/README
 %config(noreplace) %attr(0640,sympa,sympa) %{_sysconfdir}/sympa/sympa.conf
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix
@@ -645,6 +656,7 @@ fi
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/mail_tt2
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/scenari
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/web_tt2
+%{_sysconfdir}/sympa/README
 %if %{use_systemd}
 %{_unitdir}/sympa.service
 %{_unitdir}/sympa-outgoing.service
