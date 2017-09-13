@@ -249,8 +249,6 @@ Sympa の nginx 対応。
 autoreconf --install
 %endif
 
-PATH=/bin:/usr/bin
-export PATH
 # Give install "-p" preserving mtime to prevent unexpected update of CSS.
 %configure \
     --enable-fhs \
