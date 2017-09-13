@@ -298,6 +298,12 @@ rm %{buildroot}%{_datadir}/%{name}/default/ca-bundle.crt
 ln -s %{_sysconfdir}/pki/tls/certs/ca-bundle.crt \
     %{buildroot}%{_datadir}/%{name}/default/ca-bundle.crt
 
+# FIXME: Unbundle static_content/external/font-awesome
+# fontawesome-fonts{,-web} (available in Fedora and EPEL)
+
+# FIXME: Unbundle static_content/fonts/Raleway
+# impallari-raleway-fonts (available only in Fedora)
+
 # Save version info.
 mv %{buildroot}%{_sysconfdir}/sympa/data_structure.version \
     %{buildroot}%{_sysconfdir}/sympa/data_structure.current_version
