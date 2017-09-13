@@ -326,10 +326,6 @@ install -m 0755 %{SOURCE104} %{buildroot}%{_initrddir}/wwsympa
 install -m 0755 %{SOURCE105} %{buildroot}%{_initrddir}/sympasoap
 %endif
 
-# Copy rsyslog config
-mkdir -p %{buildroot}%{_sysconfdir}/rsyslog.d
-install -m 0644 %{SOURCE106} %{buildroot}%{_sysconfdir}/rsyslog.d/sympa.conf
-
 # Copy docs.
 mv %{buildroot}%{_docdir}/%{name} __doc
 cp -p AUTHORS.md CONTRIBUTING.md NEWS.md OChangeLog ONEWS README.md __doc/
@@ -342,6 +338,10 @@ cp -p %{SOURCE112} __doc/README.RPM.md
 # Copy robot aliases.
 cp -p %{SOURCE114} %{SOURCE115} %{buildroot}%{_sysconfdir}/sympa/
 chmod 644 %{buildroot}%{_sysconfdir}/sympa/aliases.sympa.*
+
+# Copy rsyslog config
+mkdir -p %{buildroot}%{_sysconfdir}/rsyslog.d
+install -m 0644 %{SOURCE106} %{buildroot}%{_sysconfdir}/rsyslog.d/sympa.conf
 
 # Create logrotate item
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
