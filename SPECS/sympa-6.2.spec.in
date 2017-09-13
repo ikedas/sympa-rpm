@@ -511,40 +511,6 @@ function upgrade_data_structure {
     fi
 }
 
-# Migrate /etc/sysconfig/sympa from previous RPM releases.
-function migrate_sysconfig_sympa {
-  [ -f %{_sysconfdir}/sysconfig/sympa ] || return 0
-  grep -q '^aliases_program' %{_sysconfdir}/sympa/sympa.conf && return
-  . %{_sysconfdir}/sysconfig/sympa
-
-  newaliases_program=
-
-  case "$NEWALIASES_PROGRAM" in
-  postfix)
-    newaliases_program=postalias
-    ;;
-  postfix-postmap|postmap)
-    newaliases_program=postmap
-    ;;
-  sendmail|newaliases)
-    newaliases_program=newaliases
-    ;;
-  sendmail-makemap|makemap)
-    newaliases_program=makemap
-    ;;
-  *)
-    newaliases_program="$NEWALIASES_PROGRAM"
-    ;;
-  esac
-  [ "x$newaliases_program" = "x" ] && return
-
-  (
-    echo ''
-    echo '# Migrated from %{_sysconfdir}/sysconfig/sympa'
-    echo "aliases_program $newaliases_program"
-  ) >> %{_sysconfdir}/sympa/sympa.conf
-}
-
 # Install
 if [ $1 -eq 1 ]; then
     create_cookie
@@ -561,7 +527,6 @@ fi
 if [ $1 -gt 1 ]; then
     fix_conf_and_robots_owner
     upgrade_data_structure
-    migrate_sysconfig_sympa
 fi
 
 
