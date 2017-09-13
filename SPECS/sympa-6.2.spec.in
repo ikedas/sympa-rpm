@@ -370,6 +370,10 @@ install -m 0644 %{SOURCE106} %{buildroot}%{_sysconfdir}/rsyslog.d/sympa.conf
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
 install -m 0644 %{SOURCE107} %{buildroot}%{_sysconfdir}/logrotate.d/sympa
 
+# Remove incomplete intranet scenario
+rm -rf %{buildroot}%{_datadir}/sympa/default/create_list_templates/intranet_list \
+       %{buildroot}%{_datadir}/sympa/default/scenari/*intranet*
+
 
 %check
 %if 0%{?fc25}%{?fc26}
@@ -438,24 +442,6 @@ function create_config {
         ## create site configurations
         cp -p %{_sysconfdir}/sympa/data_structure.current_version \
             %{_sysconfdir}/sympa/data_structure.version
-        ## Hide sample ``intranet'' choices.
-        # create_list.conf
-        if [ '!' -e %{_sysconfdir}/sympa/create_list.conf ]; then
-            cp -p %{_datadir}/sympa/default/create_list.conf \
-                %{_sysconfdir}/sympa/create_list.conf
-            cd %{_datadir}/sympa/default/create_list_templates
-            for template in *intranet*; do
-                ( echo ''; echo "$template hidden" ) \
-                    >> %{_sysconfdir}/sympa/create_list.conf
-            done
-        fi
-        # scenari
-        cd %{_datadir}/sympa/default/scenari
-        for scenario in *intranet*; do
-            if [ '!' -e %{_sysconfdir}/sympa/scenari/$scenario ]; then
-                touch %{_sysconfdir}/sympa/scenari/$scenario:ignore
-            fi
-        done
         ## create sympa_aliases
         if [ '!' -e %{_localstatedir}/lib/sympa/sympa_aliases ]; then
             touch %{_localstatedir}/lib/sympa/sympa_aliases
