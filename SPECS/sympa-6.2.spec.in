@@ -351,8 +351,8 @@ install -m 0644 %{SOURCE107} %{buildroot}%{_sysconfdir}/logrotate.d/sympa
 
 
 %check
-%if ! 0%{?fedora}
-#### Temporarily disabling tests, failing on F25/F26
+%if 0%{?fc25}%{?fc26}
+#### Temporarily ignoring tests results, failing on F25 and F26
 ##   Failed test 'file, nothing else: ok'
 ##   at t/tools_file.t line 23.
 #
@@ -362,6 +362,8 @@ install -m 0644 %{SOURCE107} %{buildroot}%{_sysconfdir}/logrotate.d/sympa
 #t/tools_file.t ........... 
 #Dubious, test returned 2 (wstat 512, 0x200)
 #Failed 2/23 subtests
+make check || true
+%else
 make check
 %endif
 %if 0%{?do_authorcheck}
