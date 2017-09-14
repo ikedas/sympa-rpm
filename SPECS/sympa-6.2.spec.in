@@ -686,6 +686,9 @@ fi
 
 
 %changelog
+* Thu Sep 14 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.19-0.2.b.2
+- Rework spec to better comply with Fedora packaging guidelines.
+
 * Sat Aug 19 2017 IKEDA Soji <ikeda@conversion.co.jp> 6.2.19b.1-1
 - Added --bindir to install sympa_smtpc under libexecdir.
 
