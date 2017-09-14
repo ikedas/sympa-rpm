@@ -430,10 +430,7 @@ function fix_conf_and_robots_owner {
 
 # create cookie
 function create_cookie {
-    cook=%{_sysconfdir}/sympa/current_cookie.$$
-    touch $cook
-    chown sympa:sympa $cook
-    chmod 640 $cook
+    cook=`mktemp`
     perl -ne 'chomp $_; print $1 if /^cookie\s+(\S.*)/' \
         %{_sysconfdir}/sympa/sympa.conf > $cook
     if [ '!' -s $cook ]; then
