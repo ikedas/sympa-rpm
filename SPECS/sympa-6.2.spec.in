@@ -262,7 +262,7 @@ export PATH
 %if %{use_systemd}
     --with-piddir=%{_rundir}/sympa \
 %else
-    --with-piddir=%{_localstatedir}/run/sympa/
+    --with-piddir=%{_localstatedir}/run/sympa/ \
 %endif
 %if %{use_systemd}
     --without-initdir \
