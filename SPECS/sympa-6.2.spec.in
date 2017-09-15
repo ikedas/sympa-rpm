@@ -259,7 +259,11 @@ export PATH
     --sysconfdir=%{_sysconfdir}/sympa \
     --with-cgidir=%{_libexecdir}/sympa \
     --with-confdir=%{_sysconfdir}/sympa \
+%if %{use_systemd}
     --with-piddir=%{_rundir}/sympa \
+%else
+    --with-piddir=%{_localstatedir}/run/sympa/ \
+%endif
 %if %{use_systemd}
     --without-initdir \
     --with-unitsdir=%{_unitdir} \
@@ -641,7 +645,7 @@ fi
 %config(noreplace) %{_sysconfdir}/systemd/system/sympa.service.d/*
 %else
 %{_initrddir}/sympa
-%attr(-,sympa,sympa) %{_rundir}/sympa/
+%attr(-,sympa,sympa) %{_localstatedir}/run/sympa/
 %endif
 
 
