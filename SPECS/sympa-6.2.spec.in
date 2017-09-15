@@ -36,9 +36,6 @@ Patch5:      sympa-6.2a.40-r11708-wizard-mhonarc.patch
 Patch13:     sympa-6.2.19b.1-confdef.patch
 # Disable sympa service by default
 Patch14:     sympa-6.2-initdefault.patch
-# Fix smtpc build warnings
-# https://github.com/ikedas/sympa/commit/02e4973a9fd6b2197a26730161d2ca077ae43804
-Patch15:     sympa-6.2.19b1-Fix_smtpc_build_warnings.patch
 @Patch1xx@
 
 BuildRequires: gcc, make
@@ -237,7 +234,6 @@ Sympa の nginx 対応。
 %patch5 -p0 -b .mhonarc
 %patch13 -p0 -b .confdef
 %patch14 -p0 -b .initdefault
-%patch15 -p1 -b .build_warnings
 
 
 %build
