@@ -17,7 +17,8 @@ URL:         http://www.sympa.org
 
 Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
-Source101:   sympa-httpd-fcgid.conf
+Source100:   sympa-httpd-fcgid-el6.conf
+Source101:   sympa-httpd-fcgid-el7.conf
 Source102:   sympa-lighttpd.conf
 Source103:   sympa-nginx-spawn_fcgi.conf
 Source104:   sympa-nginx-wwsympa-6.2.init
@@ -298,7 +299,11 @@ mv %{buildroot}%{_sysconfdir}/sympa/data_structure.version \
 
 # Copy *httpd config files.
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
+%if 0%{?fedora} || 0%{?rhel} >= 7
 install -m 0644 %{SOURCE101} %{buildroot}%{_sysconfdir}/httpd/conf.d/sympa.conf
+%else
+install -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/httpd/conf.d/sympa.conf
+%endif
 mkdir -p %{buildroot}%{_sysconfdir}/lighttpd
 install -m 0644 %{SOURCE102} %{buildroot}%{_sysconfdir}/lighttpd/sympa.conf
 mkdir -p %{buildroot}%{_sysconfdir}/nginx/conf.d
