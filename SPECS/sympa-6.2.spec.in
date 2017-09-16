@@ -108,12 +108,15 @@ Requires(postun): initscripts
 
 Requires:    smtpdaemon
 Requires:    mhonarc
+Requires:    perl(Class::Singleton)
 Requires:    perl(DBD::mysql)
 Requires:    perl(HTML::FormatText)
+Requires:    perl(HTML::Parser)
 Requires:    perl(HTML::StripScripts::Parser)
 
 # Optional CPAN packages
 Requires:    perl(AuthCAS)
+Requires:    perl(Clone)
 Requires:    perl(Crypt::CipherSaber)
 Requires:    perl(Crypt::OpenSSL::X509)
 Requires:    perl(Crypt::SMIME)
@@ -134,6 +137,7 @@ Requires:    perl(Net::SMTP)
 %if 0%{?rhel} == 6
 Requires:    perl(Unicode::CaseFold)
 %endif
+Requires:    perl(Unicode::Normalize)
 
 
 %package httpd
