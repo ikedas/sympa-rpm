@@ -332,7 +332,7 @@ install -m 0644 %{SOURCE106} %{buildroot}%{_sysconfdir}/rsyslog.d/sympa.conf
 
 # Copy docs.
 mv %{buildroot}%{_docdir}/%{name} __doc
-cp -p AUTHORS.md NEWS.md OChangeLog ONEWS README.md __doc/
+cp -p AUTHORS.md CONTRIBUTING.md NEWS.md OChangeLog ONEWS README.md __doc/
 %if %{use_systemd}
 cp -p %{SOURCE113} __doc/README.RPM.md
 %else
