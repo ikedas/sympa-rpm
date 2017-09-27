@@ -13,7 +13,107 @@ package.  A bunch of work is needed to start your Sympa service.
     Sympa and updates site configuration files.  In this process you must
     choose e-mail(s) of listmaster, database settings and so on.
 
-2 Setup database
+2 Configure mail server
+=======================
+
+a. Sendmail
+-----------
+
+  * Edit /etc/sympa/aliases.sympa.sendmail file as you prefer.
+
+  * Edit /etc/mail/sendmail.cf:
+
+    * Add following paths to AliasFile:
+
+      * /etc/sympa/aliases.sympa.sendmail
+
+      * /var/lib/sympa/sympa_aliases
+
+    * Or, if you are generating sendmail.cf by cf package, edit sendmail.mc
+      to add paths above to argument of ``ALIAS_FILE`` macro.
+
+  * Run ``newaliases``.
+
+  * Run ``systemctl restart sendmail.service``.
+
+N.B.: This instruction is to use newaliases(1) maintainance tool.  If you
+wish to use makemap(1), edit /etc/sympa/sympa.conf to add a line
+``aliases_program makemap``.
+
+b. Postfix
+----------
+
+  * Edit /etc/sympa/sympa.conf to add following line:
+    ```
+    aliases_program postalias
+    ```
+
+  * Edit /etc/sympa/aliases.sympa.postfix file as you prefer.
+
+  * Edit /etc/postfix/main.cf:
+
+    * Add following maps to $alias_maps:
+
+      * hash:/etc/sympa/aliases.sympa.postfix
+
+      * hash:/var/lib/sympa/sympa_aliases
+
+    * Add following map to $alias_database:
+
+      * hash:/etc/sympa/aliases.sympa.postfix
+
+    * Add following line:
+      ```
+      recipient_delimiter = +
+      ```
+
+  * Run ``newaliases``.
+
+  * Run ``su sympa -c /usr/sbin/sympa_newaliases.pl``.
+
+  * Run ``systemctl restart postfix.service``.
+
+N.B.: This instruction is to use postalias(1) maintainance tool.  If you
+wish to use postmap(1), edit /etc/sympa/sympa.conf to add a line
+``aliases_program postmap``.
+
+c. Other MTAs
+-------------
+
+About setting with exim and qmail, see following FAQ answers:
+
+  * http://www.sympa.org/faq/exim (English)
+
+  * http://www.sympa.org/faq/qmail (English)
+
+(Optional) Virtual domains
+--------------------------
+
+About virtual domain settings see following pages:
+
+  * http://www.sympa.org/manual/mail-aliases#virtual_domains (English)
+
+  * http://www.sympa.org/ja/manual/mail-aliases#virtual_domains (Japanese)
+
+More sophisticated virtual domain setting on Postfix is described at
+following page:
+
+  * http://sympa-ja.org/wiki/Virtual_domain_%28Postfix%29/Real_Virtual_Domain
+    (English)
+
+  * http://sympa-ja.org/wiki/Virtual_domain_%28Postfix%29 (Japanese)
+
+(Optional) Automatic lists
+--------------------------
+
+See following page:
+
+  * http://www.sympa.org/manual/list-families (English)
+
+If you want to use sympa-milter, you may install ``sympa-milter`` package.
+Note that sympa-milter 0.7 or later is required.
+
+3 Setup database
 ================
 
   * Appropriate DBI driver (DBD) should be installed: DBD::mysql, DBD::Pg,
@@ -144,106 +244,6 @@ e. Other RDBMSes
 See following page:
 
   * http://www.sympa.org/manual/database (English)
-
-3 Configure mail server
-=======================
-
-a. Sendmail
------------
-
-  * Edit /etc/sympa/aliases.sympa.sendmail file as you prefer.
-
-  * Edit /etc/mail/sendmail.cf:
-
-    * Add following paths to AliasFile:
-
-      * /etc/sympa/aliases.sympa.sendmail
-
-      * /var/lib/sympa/sympa_aliases
-
-    * Or, if you are generating sendmail.cf by cf package, edit sendmail.mc
-      to add paths above to argument of ``ALIAS_FILE`` macro.
-
-  * Run ``newaliases``.
-
-  * Run ``systemctl restart sendmail.service``.
-
-N.B.: This instruction is to use newaliases(1) maintainance tool.  If you
-wish to use makemap(1), edit /etc/sympa/sympa.conf to add a line
-``aliases_program makemap``.
-
-b. Postfix
-----------
-
-  * Edit /etc/sympa/sympa.conf to add following line:
-    ```
-    aliases_program postalias
-    ```
-
-  * Edit /etc/sympa/aliases.sympa.postfix file as you prefer.
-
-  * Edit /etc/postfix/main.cf:
-
-    * Add following maps to $alias_maps:
-
-      * hash:/etc/sympa/aliases.sympa.postfix
-
-      * hash:/var/lib/sympa/sympa_aliases
-
-    * Add following map to $alias_database:
-
-      * hash:/etc/sympa/aliases.sympa.postfix
-
-    * Add following line:
-      ```
-      recipient_delimiter = +
-      ```
-
-  * Run ``newaliases``.
-
-  * Run ``su sympa -c /usr/sbin/sympa_newaliases.pl``.
-
-  * Run ``systemctl restart postfix.service``.
-
-N.B.: This instruction is to use postalias(1) maintainance tool.  If you
-wish to use postmap(1), edit /etc/sympa/sympa.conf to add a line
-``aliases_program postmap``.
-
-c. Other MTAs
--------------
-
-About setting with exim and qmail, see following FAQ answers:
-
-  * http://www.sympa.org/faq/exim (English)
-
-  * http://www.sympa.org/faq/qmail (English)
-
-(Optional) Virtual domains
---------------------------
-
-About virtual domain settings see following pages:
-
-  * http://www.sympa.org/manual/mail-aliases#virtual_domains (English)
-
-  * http://www.sympa.org/ja/manual/mail-aliases#virtual_domains (Japanese)
-
-More sophisticated virtual domain setting on Postfix is described at
-following page:
-
-  * http://sympa-ja.org/wiki/Virtual_domain_%28Postfix%29/Real_Virtual_Domain
-    (English)
-
-  * http://sympa-ja.org/wiki/Virtual_domain_%28Postfix%29 (Japanese)
-
-(Optional) Automatic lists
---------------------------
-
-See following page:
-
-  * http://www.sympa.org/manual/list-families (English)
-
-If you want to use sympa-milter, you may install ``sympa-milter`` package.
-Note that sympa-milter 0.7 or later is required.
 
 4 Configure HTTP server
 =======================
