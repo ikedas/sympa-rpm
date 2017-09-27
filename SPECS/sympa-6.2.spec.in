@@ -600,7 +600,7 @@ fi
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/data_sources
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/families
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/search_filters
-%config(missingok) %{_sysconfdir}/sympa/data_structure.current_version
+%config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/data_structure.current_version
 %config(noreplace) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/aliases
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix
