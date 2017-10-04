@@ -111,8 +111,10 @@ Requires(postun): initscripts
 
 Requires:    smtpdaemon
 Requires:    mhonarc
+Requires:    perl(CGI::Fast)
 Requires:    perl(Class::Singleton)
 Requires:    perl(DBD::mysql)
+Requires:    perl(FCGI)
 Requires:    perl(HTML::FormatText)
 Requires:    perl(HTML::Parser)
 Requires:    perl(HTML::StripScripts::Parser)
@@ -151,8 +153,6 @@ Summary(ja): SympaのApache HTTP Server対応
 Requires: %{name} = %{version}-%{release}
 Requires: httpd
 Requires: mod_fcgid
-Requires: perl(CGI::Fast)
-Requires: perl(FCGI)
 Conflicts: %{name}-lighttpd, %{name}-nginx
 
 
@@ -164,8 +164,6 @@ Summary(ja): Sympaのlighttpd対応
 Requires: %{name} = %{version}-%{release}
 Requires: lighttpd
 Requires: lighttpd-fastcgi
-Requires: perl(CGI::Fast)
-Requires: perl(FCGI)
 Conflicts: %{name}-httpd, %{name}-nginx
 
 
@@ -177,8 +175,6 @@ Summary(ja): Sympaのnginx対応
 Requires: %{name} = %{version}-%{release}
 Requires: nginx
 Requires: spawn-fcgi
-Requires: perl(CGI::Fast)
-Requires: perl(FCGI)
 Conflicts: %{name}-httpd, %{name}-lighttpd
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
@@ -574,7 +570,7 @@ fi
 %endif
 
 
-%files -f %{name}.lang
+%files -f %{name}.lang -f web_help.lang
 %doc __doc/*
 %license COPYING
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/
@@ -614,6 +610,10 @@ fi
 %attr(4755,sympa,sympa) %{_libexecdir}/sympa/queue
 %attr(4750,root,sympa) %{_libexecdir}/sympa/sympa_newaliases-wrapper
 %attr(0750,sympa,sympa) %{_libexecdir}/sympa/sympa_smtpc
+%{_libexecdir}/sympa/sympa_soap_server.fcgi
+%attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
+%{_libexecdir}/sympa/wwsympa.fcgi
+%attr(6755,sympa,sympa) %{_libexecdir}/sympa/wwsympa-wrapper.fcgi
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
 %{_datadir}/sympa/
@@ -637,26 +637,16 @@ fi
 %endif
 
 
-%files httpd -f web_help.lang
+%files httpd
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/sympa.conf
-%attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
-%{_libexecdir}/sympa/sympa_soap_server.fcgi
-%attr(6755,sympa,sympa) %{_libexecdir}/sympa/wwsympa-wrapper.fcgi
-%{_libexecdir}/sympa/wwsympa.fcgi
 
 
-%files lighttpd -f web_help.lang
+%files lighttpd
 %config(noreplace) %{_sysconfdir}/lighttpd/sympa.conf
-%attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
-%{_libexecdir}/sympa/sympa_soap_server.fcgi
-%attr(6755,sympa,sympa) %{_libexecdir}/sympa/wwsympa-wrapper.fcgi
-%{_libexecdir}/sympa/wwsympa.fcgi
 
 
-%files nginx -f web_help.lang
+%files nginx
 %config(noreplace) %{_sysconfdir}/nginx/conf.d/sympa.conf
-%{_libexecdir}/sympa/sympa_soap_server.fcgi
-%{_libexecdir}/sympa/wwsympa.fcgi
 %if %{use_systemd}
 %{_unitdir}/wwsympa.service
 %{_unitdir}/sympasoap.service
