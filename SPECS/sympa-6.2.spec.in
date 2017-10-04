@@ -151,6 +151,12 @@ Provides:    bundled(js-jquery-jqplot) = 1.0.8r1250
 Provides:    bundled(js-jquery-ui) = 1.11.2
 Provides:    bundled(js-modernizr) = 2.6.2
 Provides:    bundled(js-respond) = 1.4.2
+# Bundled in bundled js-foundation
+Provides:    bundled(js-fastclick)
+Provides:    bundled(js-jquery) = 2.1.4
+Provides:    bundled(js-jquery-cookie) = 1.4.1
+Provides:    bundled(js-modernizr) = 2.8.3
+Provides:    bundled(js-placeholder) = 2.0.9
 
 
 %package httpd
