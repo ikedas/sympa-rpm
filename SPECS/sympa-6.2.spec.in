@@ -143,6 +143,14 @@ Requires:    perl(Unicode::CaseFold)
 %endif
 Requires:    perl(Unicode::Normalize)
 
+# Bundled javascript libs
+Provides:    bundled(js-foundation) = 5.5.3
+Provides:    bundled(js-html5shiv) = 3.7.2
+Provides:    bundled(js-jquery) = 1.11.1
+Provides:    bundled(js-jquery-jqplot) = 1.0.8r1250
+Provides:    bundled(js-jquery-ui) = 1.11.2
+Provides:    bundled(js-modernizr) = 2.6.2
+Provides:    bundled(js-respond) = 1.4.2
 
 
 %package httpd
@@ -305,6 +313,9 @@ ln -s %{_datadir}/fonts/fontawesome/ \
 # FIXME: Unbundle static_content/fonts/foundation-icons
 # Not available in Fedora nor EPEL
 # http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
+
+# FIXME: Unbundle javascript libraries from static_content/external
+# Some may not be available in Fedora or EPEL
 
 # Save version info.
 mv %{buildroot}%{_sysconfdir}/sympa/data_structure.version \
