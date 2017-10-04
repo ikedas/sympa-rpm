@@ -302,6 +302,10 @@ ln -s %{_datadir}/fonts/fontawesome/ \
 # FIXME: Unbundle static_content/fonts/Raleway
 # impallari-raleway-fonts (available only in Fedora)
 
+# FIXME: Unbundle static_content/fonts/foundation-icons
+# Not available in Fedora nor EPEL
+# http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
+
 # Save version info.
 mv %{buildroot}%{_sysconfdir}/sympa/data_structure.version \
     %{buildroot}%{_sysconfdir}/sympa/data_structure.current_version
