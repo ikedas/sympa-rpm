@@ -14,7 +14,6 @@ Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
 License:     GPLv2+
 URL:         http://www.sympa.org
-
 Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
 Source100:   sympa-httpd22-fcgid.conf
@@ -145,11 +144,11 @@ Requires:    perl(Unicode::CaseFold)
 Requires:    perl(Unicode::Normalize)
 
 
+
 %package httpd
 Summary:  Sympa with Apache HTTP Server
 Summary(fr): Sympa avec Serveur HTTP Apache
 Summary(ja): SympaのApache HTTP Server対応
-
 Requires: %{name} = %{version}-%{release}
 Requires: httpd
 Requires: mod_fcgid
@@ -160,7 +159,6 @@ Conflicts: %{name}-lighttpd, %{name}-nginx
 Summary:  Sympa with lighttpd
 Summary(fr): Sympa avec lighttpd
 Summary(ja): Sympaのlighttpd対応
-
 Requires: %{name} = %{version}-%{release}
 Requires: lighttpd
 Requires: lighttpd-fastcgi
@@ -171,11 +169,11 @@ Conflicts: %{name}-httpd, %{name}-nginx
 Summary:  Sympa with nginx
 Summary(fr): Sympa avec nginx
 Summary(ja): Sympaのnginx対応
-
 Requires: %{name} = %{version}-%{release}
 Requires: nginx
 Requires: spawn-fcgi
 Conflicts: %{name}-httpd, %{name}-lighttpd
+
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %{?perl_default_filter}
@@ -498,7 +496,6 @@ function upgrade_data_structure {
 if [ $1 -eq 1 ]; then
     create_cookie
     create_config
-
     echo ============================================================
     echo Sympa had been installed successfully.  If you installed
     echo Sympa at first time, please read:
