@@ -292,8 +292,12 @@ rm %{buildroot}%{_datadir}/%{name}/default/ca-bundle.crt
 ln -s %{_sysconfdir}/pki/tls/certs/ca-bundle.crt \
     %{buildroot}%{_datadir}/%{name}/default/ca-bundle.crt
 
-# FIXME: Unbundle static_content/external/font-awesome
-# fontawesome-fonts{,-web} (available in Fedora and EPEL)
+# Unbundle static_content/external/font-awesome
+rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome/*
+ln -s %{_datadir}/font-awesome-web/css/ \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome/css
+ln -s %{_datadir}/fonts/fontawesome/ \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome/fonts
 
 # FIXME: Unbundle static_content/fonts/Raleway
 # impallari-raleway-fonts (available only in Fedora)
@@ -565,6 +569,11 @@ if [ "$1" -ge "1" ] ; then
     /sbin/service sympasoap condrestart >/dev/null 2>&1 || :
 fi
 %endif
+
+
+%pretrans
+# Needed to remove bundled libraries and fonts
+rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fonts}
 
 
 %files -f %{name}.lang -f web_help.lang
