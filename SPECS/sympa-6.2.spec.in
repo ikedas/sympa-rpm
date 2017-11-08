@@ -4,11 +4,13 @@
 %global use_systemd 0
 %endif
 
+%global do_autoreconf 1
+
 #global pre_rel b.2
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}3%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}4%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -692,6 +694,9 @@ rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fon
 
 
 %changelog
+* Wed Nov 08 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.22-4
+- Run autoreconf for jquery patch.
+
 * Wed Oct 25 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.22-3
 - Fix scriplet bug in upgrade_data_structure.
 - Unbundle font-awesome.
