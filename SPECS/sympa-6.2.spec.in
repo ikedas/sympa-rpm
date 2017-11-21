@@ -54,11 +54,13 @@ BuildRequires: perl-generators
 # install & check
 BuildRequires: perl(Archive::Zip)
 BuildRequires: perl(CGI::Cookie)
+BuildRequires: perl(CGI::Fast)
 BuildRequires: perl(CGI::Util)
 BuildRequires: perl(Data::Password)
 BuildRequires: perl(DateTime)
 BuildRequires: perl(DateTime::Format::Mail)
 BuildRequires: perl(DBI)
+BuildRequires: perl(FCGI)
 BuildRequires: perl(File::Copy::Recursive)
 BuildRequires: perl(File::NFSLock)
 BuildRequires: perl(HTML::Entities)
