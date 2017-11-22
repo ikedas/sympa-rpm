@@ -4,17 +4,15 @@
 %global use_systemd 0
 %endif
 
-%global do_autoreconf 1
-
-#global pre_rel b.2
+%global pre_rel b.1
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}4%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
-License:     GPLv2+
+License:     GPLv2+ and MIT
 URL:         http://www.sympa.org
 Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
@@ -38,9 +36,6 @@ Patch5:      sympa-6.2a.40-r11708-wizard-mhonarc.patch
 Patch13:     sympa-6.2.19b.1-confdef.patch
 # Disable sympa service by default
 Patch14:     sympa-6.2-initdefault.patch
-# Fixes from upstream sympa-6.2 branch
-Patch20:     sympa-6.2.22-Fix_include_ldap_2level_query.patch
-Patch21:     sympa-6.2.22-Update_jquery_and_friends.patch
 @Patch1xx@
 
 BuildRequires: gcc, make
@@ -115,13 +110,8 @@ Requires(postun): initscripts
 
 Requires:    smtpdaemon
 Requires:    mhonarc
-Requires:    perl(CGI::Fast)
-Requires:    perl(Class::Singleton)
 Requires:    perl(DBD::mysql)
 Requires:    perl(FCGI)
-Requires:    perl(HTML::FormatText)
-Requires:    perl(HTML::Parser)
-Requires:    perl(HTML::StripScripts::Parser)
 
 # Optional CPAN packages
 Requires:    perl(AuthCAS)
@@ -154,7 +144,7 @@ Requires:    fontawesome-fonts-web
 Provides:    bundled(js-foundation) = 5.5.3
 Provides:    bundled(js-html5shiv) = 3.7.2
 Provides:    bundled(js-jquery) = 3.2.1
-Provides:    bundled(js-jquery-jqplot) = 1.0.8r1250
+Provides:    bundled(js-jquery-jqplot) = 1.0.8
 Provides:    bundled(js-jquery-ui) = 1.12.1
 Provides:    bundled(js-jquery-migrate) = 3.0.1
 Provides:    bundled(js-modernizr) = 2.6.2
@@ -163,8 +153,10 @@ Provides:    bundled(js-respond) = 1.4.2
 Provides:    bundled(js-fastclick)
 Provides:    bundled(js-jquery) = 2.1.4
 Provides:    bundled(js-jquery-cookie) = 1.4.1
+Provides:    bundled(js-jquery-requestAnimationFrame)
 Provides:    bundled(js-modernizr) = 2.8.3
 Provides:    bundled(js-placeholder) = 2.0.9
+Provides:    bundled(js-sizzle) = 2.2.0
 
 
 %package httpd
@@ -257,8 +249,6 @@ Sympa の nginx 対応。
 %patch5 -p0 -b .mhonarc
 %patch13 -p0 -b .confdef
 %patch14 -p0 -b .initdefault
-%patch20 -p1 -b .ldap_2level_query
-%patch21 -p1 -b .jquery
 
 
 %build
@@ -694,6 +684,14 @@ rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fon
 
 
 %changelog
+* Mon Nov 20 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.1.b.1
+- Update to 6.2.23 beta 1.
+- Drop upstream patches.
+- Add missing BuildRequires:.
+- Remove duplicate Requires:.
+- Fix License: to acknowledge for bundled javascript libraries.
+- Track more bundled javascript libraries.
+
 * Wed Nov 08 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.22-4
 - Run autoreconf for jquery patch.
 
