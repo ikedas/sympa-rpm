@@ -8,7 +8,7 @@
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -52,30 +52,65 @@ BuildRequires: autoconf, automake, gettext-devel
 BuildRequires: perl-generators
 # install & check
 BuildRequires: perl(Archive::Zip)
+BuildRequires: perl(base)
+BuildRequires: perl(Carp)
 BuildRequires: perl(CGI::Cookie)
 BuildRequires: perl(CGI::Fast)
 BuildRequires: perl(CGI::Util)
+BuildRequires: perl(Class::Singleton)
+BuildRequires: perl(Config)
+BuildRequires: perl(constant)
+BuildRequires: perl(Cwd)
 BuildRequires: perl(Data::Password)
 BuildRequires: perl(DateTime)
 BuildRequires: perl(DateTime::Format::Mail)
 BuildRequires: perl(DBI)
+BuildRequires: perl(Digest::MD5)
+BuildRequires: perl(Encode)
+BuildRequires: perl(Encode::MIME::Header)
+BuildRequires: perl(English)
 BuildRequires: perl(FCGI)
+BuildRequires: perl(Fcntl)
+BuildRequires: perl(feature)
+BuildRequires: perl(File::Copy)
 BuildRequires: perl(File::Copy::Recursive)
+BuildRequires: perl(File::Find)
 BuildRequires: perl(File::NFSLock)
+BuildRequires: perl(File::Path)
+BuildRequires: perl(File::stat)
+BuildRequires: perl(File::Temp)
+BuildRequires: perl(Getopt::Long)
 BuildRequires: perl(HTML::Entities)
 BuildRequires: perl(HTML::FormatText)
+BuildRequires: perl(HTML::Parser)
 BuildRequires: perl(HTML::StripScripts::Parser)
 BuildRequires: perl(HTML::TreeBuilder)
+BuildRequires: perl(HTTP::Request)
+BuildRequires: perl(if)
+BuildRequires: perl(IO::File)
 BuildRequires: perl(IO::Scalar)
+BuildRequires: perl(IO::Socket::SSL)
+BuildRequires: perl(lib)
 BuildRequires: perl(Locale::Messages)
+BuildRequires: perl(LWP::UserAgent)
+BuildRequires: perl(Mail::Address)
+BuildRequires: perl(MIME::Base64)
 BuildRequires: perl(MIME::Charset)
 BuildRequires: perl(MIME::EncWords)
+BuildRequires: perl(MIME::Entity)
+BuildRequires: perl(MIME::Head)
 BuildRequires: perl(MIME::Lite::HTML)
 BuildRequires: perl(MIME::Parser)
+BuildRequires: perl(MIME::Tools)
 BuildRequires: perl(Net::CIDR)
 BuildRequires: perl(Net::LDAP)
+BuildRequires: perl(POSIX)
+BuildRequires: perl(Scalar::Util)
 BuildRequires: perl(SOAP::Lite)
 BuildRequires: perl(SOAP::Transport::HTTP)
+BuildRequires: perl(Storable)
+BuildRequires: perl(strict)
+BuildRequires: perl(Sys::Hostname)
 BuildRequires: perl(Sys::Syslog)
 BuildRequires: perl(Template)
 BuildRequires: perl(Term::ProgressBar)
@@ -85,10 +120,15 @@ BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod)
 BuildRequires: perl(Text::LineFold)
 BuildRequires: perl(Time::HiRes)
+BuildRequires: perl(Time::Local)
 # For Perl prior to 5.16.0.
 %if 0%{?rhel} == 6
 BuildRequires: perl(Unicode::CaseFold)
 %endif
+BuildRequires: perl(Unicode::GCString)
+BuildRequires: perl(URI)
+BuildRequires: perl(URI::Escape)
+BuildRequires: perl(warnings)
 BuildRequires: perl(XML::LibXML)
 
 # authorcheck
@@ -410,21 +450,7 @@ done
 
 
 %check
-%if 0%{?fc25}%{?fc26}
-#### Temporarily ignoring tests results, failing on F25 and F26
-##   Failed test 'file, nothing else: ok'
-##   at t/tools_file.t line 23.
-#
-##   Failed test 'file, invalid mode: ok (fixme)'
-##   at t/tools_file.t line 32.
-## Looks like you failed 2 tests of 23.
-#t/tools_file.t ........... 
-#Dubious, test returned 2 (wstat 512, 0x200)
-#Failed 2/23 subtests
-make check || true
-%else
 make check
-%endif
 %if 0%{?do_authorcheck}
 make authorcheck || true
 %endif
@@ -684,6 +710,9 @@ rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fon
 
 
 %changelog
+* Wed Nov 22 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.2.b.1
+- Specify all build dependencies. Fixes test suite failure on F25/F26.
+
 * Mon Nov 20 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.1.b.1
 - Update to 6.2.23 beta 1.
 - Drop upstream patches.
