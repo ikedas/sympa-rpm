@@ -4,11 +4,11 @@
 %global use_systemd 0
 %endif
 
-%global pre_rel b.1
+%global pre_rel b.2
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}3%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -340,11 +340,6 @@ pushd po/web_help; rm -f stamp-po; make; popd
 
 # Fix perm to prevent warning by rpmlint.
 chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
-
-# Replace ca-bundle.crt with a symlink to the proper file
-rm %{buildroot}%{_datadir}/%{name}/default/ca-bundle.crt
-ln -s %{_sysconfdir}/pki/tls/certs/ca-bundle.crt \
-    %{buildroot}%{_datadir}/%{name}/default/ca-bundle.crt
 
 # Unbundle static_content/external/font-awesome
 rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome/*
@@ -710,6 +705,9 @@ rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fon
 
 
 %changelog
+* Thu Nov 30 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.3.b.2
+- Update to 6.2.23 beta 2.
+
 * Wed Nov 22 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.2.b.1
 - Specify all build dependencies. Fixes test suite failure on F25/F26.
 
