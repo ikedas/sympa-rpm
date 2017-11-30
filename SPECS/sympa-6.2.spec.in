@@ -491,7 +491,7 @@ function upgrade_data_structure {
 
 # Migrate /etc/sysconfig/sympa from previous RPM releases.
 function migrate_sysconfig_sympa {
-  [ -f %{_sysconfdir}/sysconfig/sympa ] || return
+  [ -f %{_sysconfdir}/sysconfig/sympa ] || return 0
   grep -q '^aliases_program' %{_sysconfdir}/sympa/sympa.conf && return
   . %{_sysconfdir}/sysconfig/sympa
 
