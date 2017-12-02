@@ -474,7 +474,7 @@ function upgrade_data_structure {
     rm -f %{_sysconfdir}/sympa/sympa.conf.bin > /dev/null 2>&1
     if %{_sbindir}/sympa.pl --upgrade > /dev/null 2>&1; then
         # Start sympa if it was running previously
-        if [ $ACTIVE == "yes" ]; then
+        if [ "$ACTIVE" == "yes" ]; then
 %if %{use_systemd}
             /usr/bin/systemctl start sympa > /dev/null 2>&1
 %else
@@ -491,7 +491,7 @@ function upgrade_data_structure {
 
 # Migrate /etc/sysconfig/sympa from previous RPM releases.
 function migrate_sysconfig_sympa {
-  [ -f %{_sysconfdir}/sysconfig/sympa ] || return
+  [ -f %{_sysconfdir}/sysconfig/sympa ] || return 0
   grep -q '^aliases_program' %{_sysconfdir}/sympa/sympa.conf && return
   . %{_sysconfdir}/sysconfig/sympa
 
