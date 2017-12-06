@@ -4,7 +4,7 @@ Post-install instruction for RPM package
                                     by IKEDA Soji <ikeda@conversion.co.jp>
 
 If you are reading this text, you may have successfully installed sympa
-package.  A bunch of works is needed to start your Sympa service.
+package.  A bunch of work is needed to start your Sympa service.
 
 1 Run sympa_wizard
 ==================
@@ -13,139 +13,7 @@ package.  A bunch of works is needed to start your Sympa service.
     Sympa and updates site configuration files.  In this process you must
     choose e-mail(s) of listmaster, database settings and so on.
 
-2 Setup database
-================
-
-  * Appropriate DBI driver (DBD) should be installed: DBD::mysql, DBD::Pg,
-    DBD::Oracle, DBD::Sybase or DBD::SQLite.
-
-  * Create a database and a database user dedicated for Sympa.  The user
-    must have most of privileges on database.
-
-a. MySQL or MariaDB
--------------------
-
-  * MySQL 4.1.1 or later, and any releases of MariaDB will work.
-
-  * Install perl-DBD-MySQL package.
-
-  * Ensure that sympa.conf includes appropriate values for these parameters:
-    db_type, db_name, db_host, db_user and db_passwd.
-
-  * MyISAM or Aria, and InnoDB or XtraDB storage engines may work.  Check
-    ``default-storage-engine`` and ``default-table-type`` options of your
-    MySQL / MariaDB server.
-
-  * Create database and database user:
-    ```
-    $ mysql
-    mysql> CREATE DATABASE sympa CHARACTER SET utf8;
-    mysql> GRANT ALL PRIVILEGES ON sympa.* TO <db_user>@<client host>
-        -> IDENTIFIED BY '<db_passwd>';
-    mysql> QUIT
-    ```
-
-  * Create table structure:
-    ```
-    # sympa.pl --health_check
-    ```
-
-N.B.: MySQL/MariaDB 5.5.3 or later provides ``utf8mb4`` character set
-which covers full range of Unicode including such as chinese ideographs
-used for persons' names.  As of Sympa-6.2a.33 r8753, both ``utf8`` and
-``utf8mb4`` character sets are supported.  To use ``utf8mb4`` charcter
-set, you might want to replace ``utf8`` in SQL statement above with
-``utf8mb4``.
-
-b. Oracle
----------
-
-  * Oracle 7 or later may work.  Oracle 9i or later is recommended.
-
-  * Install perl-DBD-Oracle package.
-
-  * Ensure that sympa.conf includes appropriate values for these parameters:
-    db_type, db_name, db_host, db_user, db_passwd and db_env.
-
-    * "db_name" must be same as Oracle SID.
-
-    * "db_env" should include definition of NLS_LANG and ORACLE_HOME.
-
-  * Create database user:
-    ```
-    $ NLS_LANG=American_America.AL32UTF8; export NLS_LANG
-    $ ORACLE_HOME=<Oracle home>; export ORACLE_HOME
-    $ ORACLE_SID=<Oracle SID>; export ORACLE_SID
-    $ sqlplus <system login>/<password>
-    SQL> CREATE USER <db_user> IDENTIFIED BY <db_passwd>
-      2  DEFAULT TABLESPACE <tablespace>
-      3  TEMPORARY TABLESPACE <tablespace>;
-    SQL> GRANT CREATE SESSION TO <db_user>;
-    SQL> GRANT CREATE TABLE TO <db_user>;
-    SQL> GRANT CREATE SYNONYM TO <db_user>;
-    SQL> GRANT CREATE VIEW TO <db_user>;
-    SQL> GRANT EXECUTE ANY PROCEDURE TO <db_user>;
-    SQL> GRANT SELECT ANY TABLE TO <db_user>;
-    SQL> GRANT SELECT ANY SEQUENCE TO <db_user>;
-    SQL> GRANT RESOURCE TO <db_user>;
-    SQL> QUIT
-    ```
-
-  * Create table structure:
-    ```
-    # sympa.pl --health_check
-    ```
-
-c. PostgreSQL
--------------
-
-  * PostgreSQL 7.4 or later is required.
-
-  * Install perl-DBD-Pg package.
-
-  * Ensure that sympa.conf includes appropriate values for these parameters:
-    db_type, db_name, db_host, db_user, db_passwd.
-
-  * Create database and role:
-    ```
-    $ psql
-    postgres=# CREATE ROLE <db_user> NOSUPERUSER NOCREATEDB NOCREATEROLE
-    postgres=# NOINHERIT LOGIN ENCRYPTED PASSWORD '<db_passwd>';
-    postgres=# CREATE DATABASE sympa OWNER <db_user> ENCODING 'UNICODE';
-    postgres=# \q
-    ```
-
-  * Create table structure:
-    ```
-    # sympa.pl --health_check
-    ```
-
-d. SQLite
----------
-
-  * Ensure that SQLite 3.x is installed.  As of Sympa-6.2a.33, SQLite 2.x
-    and earlier are no longer supported.
-
-  * Install perl-DBD-SQLite package.
-
-  * Ensure that "db_name" in sympa.conf is absolute path to database file
-    you want to create.
-
-  * Create database file and table structure:
-    ```
-    # touch <db_name>
-    # chown sympa:sympa <db_name>
-    # sympa.pl --health_check
-    ```
-
-e. Other RDBMSes
-----------------
-
-See following page:
-
-  * http://www.sympa.org/manual/database (English)
-
-3 Configure mail server
+2 Configure mail server
 =======================
 
 a. Sendmail
@@ -244,6 +112,138 @@ See following page:
 
 If you want to use sympa-milter, you may install ``sympa-milter`` package.
 Note that sympa-milter 0.7 or later is required.
+
+3 Setup database
+================
+
+  * Appropriate DBI driver (DBD) should be installed: DBD::mysql, DBD::Pg,
+    DBD::Oracle, DBD::Sybase or DBD::SQLite.
+
+  * Create a database and a database user dedicated for Sympa.  The user
+    must have most of privileges on database.
+
+a. MySQL or MariaDB
+-------------------
+
+  * MySQL 4.1.1 or later, and any releases of MariaDB will work.
+
+  * Install perl-DBD-MySQL package.
+
+  * Ensure that sympa.conf includes appropriate values for these parameters:
+    db_type, db_name, db_host, db_user and db_passwd.
+
+  * MyISAM or Aria, and InnoDB or XtraDB storage engines may work.  Check
+    ``default-storage-engine`` and ``default-table-type`` options of your
+    MySQL / MariaDB server.
+
+  * Create database and database user:
+    ```
+    $ mysql
+    mysql> CREATE DATABASE sympa CHARACTER SET utf8;
+    mysql> GRANT ALL PRIVILEGES ON sympa.* TO <db_user>@<client host>
+        -> IDENTIFIED BY '<db_passwd>';
+    mysql> QUIT
+    ```
+
+  * Create table structure:
+    ```
+    # sympa.pl --health_check
+    ```
+
+N.B.: MySQL/MariaDB 5.5.3 or later provides ``utf8mb4`` character set
+which covers full range of Unicode including such as chinese ideographs
+used for persons' names.  As of Sympa-6.2a.33 r8753, both ``utf8`` and
+``utf8mb4`` character sets are supported.  To use ``utf8mb4`` character
+set, you might want to replace ``utf8`` in SQL statement above with
+``utf8mb4``.
+
+b. Oracle
+---------
+
+  * Oracle 7 or later may work.  Oracle 9i or later is recommended.
+
+  * Install perl-DBD-Oracle package.
+
+  * Ensure that sympa.conf includes appropriate values for these parameters:
+    db_type, db_name, db_host, db_user, db_passwd and db_env.
+
+    * "db_name" must be same as Oracle SID.
+
+    * "db_env" should include definition of NLS_LANG and ORACLE_HOME.
+
+  * Create database user:
+    ```
+    $ NLS_LANG=American_America.AL32UTF8; export NLS_LANG
+    $ ORACLE_HOME=<Oracle home>; export ORACLE_HOME
+    $ ORACLE_SID=<Oracle SID>; export ORACLE_SID
+    $ sqlplus <system login>/<password>
+    SQL> CREATE USER <db_user> IDENTIFIED BY <db_passwd>
+      2  DEFAULT TABLESPACE <tablespace>
+      3  TEMPORARY TABLESPACE <tablespace>;
+    SQL> GRANT CREATE SESSION TO <db_user>;
+    SQL> GRANT CREATE TABLE TO <db_user>;
+    SQL> GRANT CREATE SYNONYM TO <db_user>;
+    SQL> GRANT CREATE VIEW TO <db_user>;
+    SQL> GRANT EXECUTE ANY PROCEDURE TO <db_user>;
+    SQL> GRANT SELECT ANY TABLE TO <db_user>;
+    SQL> GRANT SELECT ANY SEQUENCE TO <db_user>;
+    SQL> GRANT RESOURCE TO <db_user>;
+    SQL> QUIT
+    ```
+
+  * Create table structure:
+    ```
+    # sympa.pl --health_check
+    ```
+
+c. PostgreSQL
+-------------
+
+  * PostgreSQL 7.4 or later is required.
+
+  * Install perl-DBD-Pg package.
+
+  * Ensure that sympa.conf includes appropriate values for these parameters:
+    db_type, db_name, db_host, db_user, db_passwd.
+
+  * Create database and role:
+    ```
+    $ psql
+    postgres=# CREATE ROLE <db_user> NOSUPERUSER NOCREATEDB NOCREATEROLE
+    postgres=# NOINHERIT LOGIN ENCRYPTED PASSWORD '<db_passwd>';
+    postgres=# CREATE DATABASE sympa OWNER <db_user> ENCODING 'UNICODE';
+    postgres=# \q
+    ```
+
+  * Create table structure:
+    ```
+    # sympa.pl --health_check
+    ```
+
+d. SQLite
+---------
+
+  * Ensure that SQLite 3.x is installed.  As of Sympa-6.2a.33, SQLite 2.x
+    and earlier are no longer supported.
+
+  * Install perl-DBD-SQLite package.
+
+  * Ensure that "db_name" in sympa.conf is absolute path to database file
+    you want to create.
+
+  * Create database file and table structure:
+    ```
+    # touch <db_name>
+    # chown sympa:sympa <db_name>
+    # sympa.pl --health_check
+    ```
+
+e. Other RDBMSes
+----------------
+
+See following page:
+
+  * http://www.sympa.org/manual/database (English)
 
 4 Configure HTTP server
 =======================
