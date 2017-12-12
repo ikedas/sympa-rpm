@@ -179,11 +179,16 @@ Requires:    perl(Unicode::CaseFold)
 Requires:    perl(Unicode::Normalize)
 
 Requires:    fontawesome-fonts-web
+%if 0%{?fedora}
+Requires:    js-jquery3
+%endif
 
 # Bundled javascript libs
 Provides:    bundled(js-foundation) = 5.5.3
 Provides:    bundled(js-html5shiv) = 3.7.2
+%if ! 0%{?fedora}
 Provides:    bundled(js-jquery) = 3.2.1
+%endif
 Provides:    bundled(js-jquery-jqplot) = 1.0.8
 Provides:    bundled(js-jquery-ui) = 1.12.1
 Provides:    bundled(js-jquery-migrate) = 1.4.1
@@ -353,6 +358,12 @@ rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awe
 
 # FIXME: Unbundle javascript libraries from static_content/external
 # Some may not be available in Fedora or EPEL
+# jquery
+%if 0%{?fedora}
+rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+ln -s %{_datadir}/javascript/jquery/3/jquery.js \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+%endif
 
 # Save version info.
 mv %{buildroot}%{_sysconfdir}/sympa/data_structure.version \
@@ -705,6 +716,9 @@ fi
 %changelog
 * Thu Dec 14 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.4.b.3
 - Update to 6.2.23 beta 3.
+
+* Tue Dec 12 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.4.b.2
+- Unbundle jquery (Fedora only).
 
 * Thu Nov 30 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.3.b.2
 - Update to 6.2.23 beta 2.
