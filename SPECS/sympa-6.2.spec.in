@@ -348,6 +348,7 @@ rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awe
 
 # FIXME: Unbundle static_content/fonts/foundation-icons
 # Not available in Fedora nor EPEL
+# https://fedoraproject.org/wiki/Foundation_icons_font
 # http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
 
 # FIXME: Unbundle javascript libraries from static_content/external
