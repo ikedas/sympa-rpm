@@ -4,11 +4,11 @@
 %global use_systemd 0
 %endif
 
-%global pre_rel b.2
+%global pre_rel b.3
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}3%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}4%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -186,12 +186,11 @@ Provides:    bundled(js-html5shiv) = 3.7.2
 Provides:    bundled(js-jquery) = 3.2.1
 Provides:    bundled(js-jquery-jqplot) = 1.0.8
 Provides:    bundled(js-jquery-ui) = 1.12.1
-Provides:    bundled(js-jquery-migrate) = 3.0.1
+Provides:    bundled(js-jquery-migrate) = 1.4.1
 Provides:    bundled(js-modernizr) = 2.6.2
 Provides:    bundled(js-respond) = 1.4.2
 # Bundled in bundled js-foundation
 Provides:    bundled(js-fastclick)
-Provides:    bundled(js-jquery) = 2.1.4
 Provides:    bundled(js-jquery-cookie) = 1.4.1
 Provides:    bundled(js-jquery-requestAnimationFrame)
 Provides:    bundled(js-modernizr) = 2.8.3
@@ -705,6 +704,9 @@ rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fon
 
 
 %changelog
+* Thu Dec 14 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.4.b.3
+- Update to 6.2.23 beta 3.
+
 * Thu Nov 30 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.3.b.2
 - Update to 6.2.23 beta 2.
 
