@@ -20,8 +20,8 @@
 %global pre_rel b.3
 
 Name:        sympa
-Version:     @VERSION@
-Release:     %{?pre_rel:0.}3%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Version:     6.2.25
+Release:     %{?pre_rel:0.}3%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -49,7 +49,6 @@ Patch5:      sympa-6.2a.40-r11708-wizard-mhonarc.patch
 Patch13:     sympa-6.2.19b.1-confdef.patch
 # Disable sympa service by default
 Patch14:     sympa-6.2-initdefault.patch
-@Patch1xx@
 
 BuildRequires: gcc, make
 BuildRequires: gettext
@@ -345,7 +344,6 @@ Sympa の nginx 対応。
 
 %prep
 %setup -q -n %{name}-%{version}%{?pre_rel}
-@patch1xx@
 %patch5 -p0 -b .mhonarc
 %patch13 -p0 -b .confdef
 %patch14 -p0 -b .initdefault
