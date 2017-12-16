@@ -644,7 +644,6 @@ rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fon
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/families
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/search_filters
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/data_structure.current_version
-%config(noreplace) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/aliases
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix
 %{_sysconfdir}/smrsh/*
