@@ -408,8 +408,9 @@ ln -s %{_datadir}/doc/%{name}/README \
 %endif
 
 # Copy robot aliases.
-cp -p %{SOURCE114} %{SOURCE115} %{buildroot}%{_sysconfdir}/sympa/
-chmod 644 %{buildroot}%{_sysconfdir}/sympa/aliases.sympa.*
+install -m 0644 %{SOURCE114} %{SOURCE115} %{buildroot}%{_sysconfdir}/sympa/
+touch %{buildroot}%{_sysconfdir}/sympa/aliases.sympa.sendmail.db
+touch %{buildroot}%{_sysconfdir}/sympa/aliases.sympa.postfix.db
 
 # Copy rsyslog config
 mkdir -p %{buildroot}%{_sysconfdir}/rsyslog.d
@@ -496,7 +497,10 @@ function create_config {
         if [ '!' -e %{_localstatedir}/lib/sympa/sympa_aliases ]; then
             touch %{_localstatedir}/lib/sympa/sympa_aliases
             chown sympa:sympa %{_localstatedir}/lib/sympa/sympa_aliases
-            chmod 640 %{_localstatedir}/lib/sympa/sympa_aliases
+            chmod 644 %{_localstatedir}/lib/sympa/sympa_aliases
+            touch %{_localstatedir}/lib/sympa/sympa_aliases.db
+            chown sympa:root %{_localstatedir}/lib/sympa/sympa_aliases.db
+            chmod 664 %{_localstatedir}/lib/sympa/sympa_aliases.db
         fi
     fi
 }
@@ -636,7 +640,9 @@ fi
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/search_filters
 %config(missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/data_structure.current_version
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail
+%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.sendmail.db
 %config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix
+%config(noreplace) %{_sysconfdir}/sympa/aliases.sympa.postfix.db
 %{_sysconfdir}/smrsh/*
 %config(noreplace) %{_sysconfdir}/rsyslog.d/*
 %config(noreplace) %{_sysconfdir}/logrotate.d/sympa
