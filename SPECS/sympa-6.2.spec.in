@@ -364,8 +364,8 @@ install -m 0644 %{SOURCE101} %{buildroot}%{_sysconfdir}/httpd/conf.d/sympa.conf
 %else
 install -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/httpd/conf.d/sympa.conf
 %endif
-mkdir -p %{buildroot}%{_sysconfdir}/lighttpd
-install -m 0644 %{SOURCE102} %{buildroot}%{_sysconfdir}/lighttpd/sympa.conf
+mkdir -p %{buildroot}%{_sysconfdir}/lighttpd/conf.d
+install -m 0644 %{SOURCE102} %{buildroot}%{_sysconfdir}/lighttpd/conf.d/sympa.conf
 mkdir -p %{buildroot}%{_sysconfdir}/nginx/conf.d
 install -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/nginx/conf.d/sympa.conf
 
@@ -679,7 +679,7 @@ fi
 
 
 %files lighttpd
-%config(noreplace) %{_sysconfdir}/lighttpd/sympa.conf
+%config(noreplace) %{_sysconfdir}/lighttpd/conf.d/sympa.conf
 
 
 %files nginx
