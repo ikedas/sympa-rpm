@@ -341,11 +341,7 @@ pushd po/web_help; rm -f stamp-po; make; popd
 chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
 
 # Unbundle static_content/external/font-awesome
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome/*
-ln -s %{_datadir}/font-awesome-web/css/ \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome/css
-ln -s %{_datadir}/fonts/fontawesome/ \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome/fonts
+rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome
 
 # FIXME: Unbundle static_content/fonts/Raleway
 # impallari-raleway-fonts (available only in Fedora)
@@ -368,8 +364,8 @@ install -m 0644 %{SOURCE101} %{buildroot}%{_sysconfdir}/httpd/conf.d/sympa.conf
 %else
 install -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/httpd/conf.d/sympa.conf
 %endif
-mkdir -p %{buildroot}%{_sysconfdir}/lighttpd
-install -m 0644 %{SOURCE102} %{buildroot}%{_sysconfdir}/lighttpd/sympa.conf
+mkdir -p %{buildroot}%{_sysconfdir}/lighttpd/conf.d
+install -m 0644 %{SOURCE102} %{buildroot}%{_sysconfdir}/lighttpd/conf.d/sympa.conf
 mkdir -p %{buildroot}%{_sysconfdir}/nginx/conf.d
 install -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/nginx/conf.d/sympa.conf
 
@@ -612,11 +608,6 @@ fi
 %endif
 
 
-%pretrans
-# Needed to remove bundled libraries and fonts
-rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fonts}
-
-
 %files -f %{name}.lang -f web_help.lang
 %doc __doc/*
 %license COPYING
@@ -688,7 +679,7 @@ rm -rf %{_localstatedir}/lib/sympa/static_content/external/font-awesome/{css,fon
 
 
 %files lighttpd
-%config(noreplace) %{_sysconfdir}/lighttpd/sympa.conf
+%config(noreplace) %{_sysconfdir}/lighttpd/conf.d/sympa.conf
 
 
 %files nginx
