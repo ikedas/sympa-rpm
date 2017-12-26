@@ -489,19 +489,19 @@ function create_cookie {
 
 # create config at first time.
 function create_config {
+    ## create site configurations
     if [ '!' -e %{_sysconfdir}/sympa/data_structure.version ]; then
-        ## create site configurations
         cp -p %{_sysconfdir}/sympa/data_structure.current_version \
             %{_sysconfdir}/sympa/data_structure.version
-        ## create sympa_aliases
-        if [ '!' -e %{_localstatedir}/lib/sympa/sympa_aliases ]; then
-            touch %{_localstatedir}/lib/sympa/sympa_aliases
-            chown sympa:sympa %{_localstatedir}/lib/sympa/sympa_aliases
-            chmod 644 %{_localstatedir}/lib/sympa/sympa_aliases
-            touch %{_localstatedir}/lib/sympa/sympa_aliases.db
-            chown sympa:root %{_localstatedir}/lib/sympa/sympa_aliases.db
-            chmod 664 %{_localstatedir}/lib/sympa/sympa_aliases.db
-        fi
+    fi
+    ## create sympa_aliases
+    if [ '!' -e %{_localstatedir}/lib/sympa/sympa_aliases ]; then
+        touch %{_localstatedir}/lib/sympa/sympa_aliases
+        chown sympa:sympa %{_localstatedir}/lib/sympa/sympa_aliases
+        chmod 644 %{_localstatedir}/lib/sympa/sympa_aliases
+        touch %{_localstatedir}/lib/sympa/sympa_aliases.db
+        chown sympa:root %{_localstatedir}/lib/sympa/sympa_aliases.db
+        chmod 664 %{_localstatedir}/lib/sympa/sympa_aliases.db
     fi
 }
 
