@@ -8,7 +8,7 @@
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -720,6 +720,9 @@ fi
 
 
 %changelog
+* Tue Dec 26 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-2
+- Ensure newaliases works out of the box.
+
 * Thu Dec 21 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-1
 - Update to 6.2.24.
 
