@@ -691,7 +691,7 @@ fi
 %{_unitdir}/sympa-bounce.service
 %{_unitdir}/sympa-task.service
 %{_tmpfilesdir}/sympa.conf
-%ghost %{_rundir}/sympa/
+%ghost %attr(-,sympa,sympa) %{_rundir}/sympa/
 %dir %{_sysconfdir}/systemd/system/sympa.service.d/
 %config(noreplace) %{_sysconfdir}/systemd/system/sympa.service.d/*
 %else
