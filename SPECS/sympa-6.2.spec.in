@@ -179,13 +179,18 @@ Requires:    perl(Unicode::CaseFold)
 Requires:    perl(Unicode::Normalize)
 
 Requires:    fontawesome-fonts-web
+%if 0%{?fedora} >= 27
+Requires:    js-html5shiv
+%endif
 %if 0%{?fedora}
 Requires:    js-jquery3
 %endif
 
 # Bundled javascript libs
 Provides:    bundled(js-foundation) = 5.5.3
+%if ! 0%{?fedora} >= 27
 Provides:    bundled(js-html5shiv) = 3.7.2
+%endif
 %if ! 0%{?fedora}
 Provides:    bundled(js-jquery) = 3.2.1
 %endif
@@ -358,6 +363,12 @@ rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awe
 
 # FIXME: Unbundle javascript libraries from static_content/external
 # Some may not be available in Fedora or EPEL
+# html5shiv
+%if 0%{?fedora} >=27
+rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+ln -s %{_datadir}/javascript/html5shiv.js \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+%endif
 # jquery
 %if 0%{?fedora}
 rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
