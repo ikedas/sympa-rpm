@@ -185,6 +185,7 @@ Requires:    js-html5shiv
 %if 0%{?fedora}
 Requires:    js-jquery3
 %endif
+Requires:    js-respond
 
 # Bundled javascript libs
 Provides:    bundled(js-foundation) = 5.5.3
@@ -198,7 +199,6 @@ Provides:    bundled(js-jquery-jqplot) = 1.0.8
 Provides:    bundled(js-jquery-ui) = 1.12.1
 Provides:    bundled(js-jquery-migrate) = 1.4.1
 Provides:    bundled(js-modernizr) = 2.6.2
-Provides:    bundled(js-respond) = 1.4.2
 # Bundled in bundled js-foundation
 Provides:    bundled(js-fastclick)
 Provides:    bundled(js-jquery-cookie) = 1.4.1
@@ -374,6 +374,12 @@ ln -s %{_datadir}/javascript/html5shiv.js \
 rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
 ln -s %{_datadir}/javascript/jquery/3/jquery.js \
     %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+%endif
+# respond
+%if %{unbundle_respond}
+rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
+ln -s %{_datadir}/javascript/respond.min.js \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
 %endif
 
 # Save version info.
