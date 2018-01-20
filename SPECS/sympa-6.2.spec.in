@@ -651,7 +651,15 @@ fi
 %attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
 %{_libexecdir}/sympa/wwsympa.fcgi
 %attr(6755,sympa,sympa) %{_libexecdir}/sympa/wwsympa-wrapper.fcgi
-%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/
+%dir %{_localstatedir}/lib/sympa/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/arc/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/bounce/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/list_data
+%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/
+%{_localstatedir}/lib/sympa/static_content/external/
+%{_localstatedir}/lib/sympa/static_content/fonts/
+%{_localstatedir}/lib/sympa/static_content/icons/
+%{_localstatedir}/lib/sympa/static_content/js/
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
 %{_datadir}/sympa/
 %{_mandir}/man1/*
