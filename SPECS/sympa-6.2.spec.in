@@ -5,7 +5,7 @@
 %endif
 
 %global unbundle_foundation     0
-%global unbundle_html5shiv      0%{?fedora >= 27:1}
+%global unbundle_html5shiv      0%{?fedora}
 %global unbundle_jquery         0%{?fedora}
 %global unbundle_jquery_migrate 0
 %global unbundle_jquery_ui      0
