@@ -4,11 +4,11 @@
 %global use_systemd 0
 %endif
 
-%global pre_rel b.3
+#global pre_rel b.3
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}4%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -691,7 +691,7 @@ fi
 %{_unitdir}/sympa-bounce.service
 %{_unitdir}/sympa-task.service
 %{_tmpfilesdir}/sympa.conf
-%ghost %{_rundir}/sympa/
+%ghost %attr(-,sympa,sympa) %{_rundir}/sympa/
 %dir %{_sysconfdir}/systemd/system/sympa.service.d/
 %config(noreplace) %{_sysconfdir}/systemd/system/sympa.service.d/*
 %else
@@ -720,6 +720,12 @@ fi
 
 
 %changelog
+* Tue Dec 26 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-2
+- Ensure newaliases works out of the box.
+
+* Thu Dec 21 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-1
+- Update to 6.2.24.
+
 * Thu Dec 14 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.23-0.4.b.3
 - Update to 6.2.23 beta 3.
 
