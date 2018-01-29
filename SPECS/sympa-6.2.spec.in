@@ -4,6 +4,15 @@
 %global use_systemd 0
 %endif
 
+%global unbundle_foundation     0
+%global unbundle_html5shiv      0%{?fedora}
+%global unbundle_jquery         0%{?fedora}
+%global unbundle_jquery_migrate 0
+%global unbundle_jquery_ui      0
+%global unbundle_jqplot         0
+%global unbundle_modernizr      0
+%global unbundle_respond        0%{?fedora}%{?rhel}
+
 #global pre_rel b.3
 
 Name:        sympa
@@ -178,22 +187,20 @@ Requires:    perl(Unicode::CaseFold)
 %endif
 Requires:    perl(Unicode::Normalize)
 
+# Bundled fonts
 Requires:    fontawesome-fonts-web
-%if 0%{?fedora}
-Requires:    js-jquery3
-%endif
+# FIXME: foundation icons 
+#        See https://fedoraproject.org/wiki/Foundation_icons_font
+#            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
+# FIXME: raleway
+#        See https://bugzilla.redhat.com/show_bug.cgi?id=1525401
 
 # Bundled javascript libs
+# foundation
+%if %{unbundle_foundation}
+Requires:    js-foundation5
+%else
 Provides:    bundled(js-foundation) = 5.5.3
-Provides:    bundled(js-html5shiv) = 3.7.2
-%if ! 0%{?fedora}
-Provides:    bundled(js-jquery) = 3.2.1
-%endif
-Provides:    bundled(js-jquery-jqplot) = 1.0.8
-Provides:    bundled(js-jquery-ui) = 1.12.1
-Provides:    bundled(js-jquery-migrate) = 1.4.1
-Provides:    bundled(js-modernizr) = 2.6.2
-Provides:    bundled(js-respond) = 1.4.2
 # Bundled in bundled js-foundation
 Provides:    bundled(js-fastclick)
 Provides:    bundled(js-jquery-cookie) = 1.4.1
@@ -201,6 +208,49 @@ Provides:    bundled(js-jquery-requestAnimationFrame)
 Provides:    bundled(js-modernizr) = 2.8.3
 Provides:    bundled(js-placeholder) = 2.0.9
 Provides:    bundled(js-sizzle) = 2.2.0
+%endif
+# html5shiv
+%if %{unbundle_html5shiv}
+Requires:    js-html5shiv
+%else
+Provides:    bundled(js-html5shiv) = 3.7.2
+%endif
+# jquery
+%if %{unbundle_jquery}
+Requires:    js-jquery3
+%else
+Provides:    bundled(js-jquery) = 3.2.1
+%endif
+# jquery-migrate
+%if %{unbundle_jquery_migrate}
+Requires:    js-jquery-migrate
+%else
+Provides:    bundled(js-jquery-migrate) = 1.4.1 
+%endif
+# jquery-ui
+%if %{unbundle_jquery_ui}
+Requires:    xstatic-jquery-ui-common
+%else
+Provides:    bundled(js-jquery-ui) = 1.12.1
+%endif
+# jqplot
+%if %{unbundle_jqplot}
+Requires:    js-jqplot
+%else
+Provides:    bundled(js-jquery-jqplot) = 1.0.8
+%endif
+# modernizr
+%if %{unbundle_modernizr}
+Requires:    js-modernizr2
+%else
+Provides:    bundled(js-modernizr) = 2.6.2
+%endif
+# respond
+%if %{unbundle_respond}
+Requires:    js-respond
+%else
+Provides:    bundled(js-respond) = 1.4.2
+%endif
 
 
 %package httpd
@@ -345,24 +395,34 @@ pushd po/web_help; rm -f stamp-po; make; popd
 # Fix perm to prevent warning by rpmlint.
 chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
 
-# Unbundle static_content/external/font-awesome
+# Unbundle fonts from static_content/external/font-awesome
 rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome
-
-# FIXME: Unbundle static_content/fonts/Raleway
-# impallari-raleway-fonts (available only in Fedora)
-
 # FIXME: Unbundle static_content/fonts/foundation-icons
-# Not available in Fedora nor EPEL
-# https://fedoraproject.org/wiki/Foundation_icons_font
-# http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
+# FIXME: Unbundle static_content/fonts/Raleway
 
-# FIXME: Unbundle javascript libraries from static_content/external
-# Some may not be available in Fedora or EPEL
+# Unbundle javascript libraries from static_content/external
+# FIXME : foundation
+# html5shiv
+%if %{unbundle_html5shiv}
+rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+ln -s %{_datadir}/javascript/html5shiv.js \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+%endif
 # jquery
-%if 0%{?fedora}
+%if %{unbundle_jquery}
 rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
 ln -s %{_datadir}/javascript/jquery/3/jquery.js \
     %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+%endif
+# FIXME : jquery-migrate
+# FIXME : jquery-ui
+# FIXME : jqplot
+# FIXME : modernizr
+# respond
+%if %{unbundle_respond}
+rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
+ln -s %{_datadir}/javascript/respond.min.js \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
 %endif
 
 # Save version info.
