@@ -4,6 +4,8 @@
 %global use_systemd 0
 %endif
 
+%global unbundle_raleway        0%{?fedora}
+
 %global unbundle_foundation     0
 %global unbundle_html5shiv      0%{?fedora}
 %global unbundle_jquery         0%{?fedora}
@@ -189,11 +191,12 @@ Requires:    perl(Unicode::Normalize)
 
 # Bundled fonts
 Requires:    fontawesome-fonts-web
+%if %{unbundle_raleway}
+Requires:    impallari-raleway-fonts
+%endif
 # FIXME: foundation icons 
 #        See https://fedoraproject.org/wiki/Foundation_icons_font
 #            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
-# FIXME: raleway
-#        See https://bugzilla.redhat.com/show_bug.cgi?id=1525401
 
 # Bundled javascript libs
 # foundation
@@ -397,8 +400,13 @@ chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
 
 # Unbundle fonts from static_content/external/font-awesome
 rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome
+# Unbundle fonts from static_content/fonts/Raleway
+%if %{unbundle_raleway}
+rm -f %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+%endif
 # FIXME: Unbundle static_content/fonts/foundation-icons
-# FIXME: Unbundle static_content/fonts/Raleway
 
 # Unbundle javascript libraries from static_content/external
 # FIXME : foundation
@@ -781,6 +789,7 @@ fi
 - Remove useless and bogus directories creation for conf override.
 - Own the now properly created css and pictures directories.
   Subsequently the above directory doesn't need to be writable anymore.
+- Unbundle Raleway font.
 
 * Tue Dec 26 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-2
 - Ensure newaliases works out of the box.
