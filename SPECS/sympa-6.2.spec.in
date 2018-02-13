@@ -4,6 +4,8 @@
 %global use_systemd 0
 %endif
 
+%global static_content %{_datadir}/sympa/static_content
+
 %global unbundle_raleway        0%{?fedora}
 
 %global unbundle_foundation     0
@@ -376,6 +378,9 @@ autoreconf --install
     --with-smrshdir=%{_sysconfdir}/smrsh \
     --with-aliases_file=%{_localstatedir}/lib/sympa/sympa_aliases \
     --with-perl=%{_bindir}/perl \
+    --with-staticdir=%{static_content} \
+    --with-cssdir=%{_localstatedir}/lib/sympa/css \
+    --with-picturesdir=%{_localstatedir}/lib/sympa/pictures \
     INSTALL_DATA='install -c -p -m 644'
 %make_build
 
@@ -396,12 +401,12 @@ pushd po/web_help; rm -f stamp-po; make; popd
 chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
 
 # Unbundle fonts from static_content/external/font-awesome
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome
+rm -rf %{buildroot}/%{static_content}/external/font-awesome
 # Unbundle fonts from static_content/fonts/Raleway
 %if %{unbundle_raleway}
-rm -f %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+rm -f %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+    %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 %endif
 # FIXME: Unbundle static_content/fonts/foundation-icons
 
@@ -409,15 +414,15 @@ ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
 # FIXME : foundation
 # html5shiv
 %if %{unbundle_html5shiv}
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+rm -rf %{buildroot}/%{static_content}/external/html5shiv/html5shiv.js
 ln -s %{_datadir}/javascript/html5shiv.js \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+    %{buildroot}/%{static_content}/external/html5shiv/html5shiv.js
 %endif
 # jquery
 %if %{unbundle_jquery}
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+rm -rf %{buildroot}/%{static_content}/external/jquery.js
 ln -s %{_datadir}/javascript/jquery/3/jquery.js \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+    %{buildroot}/%{static_content}/external/jquery.js
 %endif
 # FIXME : jquery-migrate
 # FIXME : jquery-ui
@@ -425,9 +430,9 @@ ln -s %{_datadir}/javascript/jquery/3/jquery.js \
 # FIXME : modernizr
 # respond
 %if %{unbundle_respond}
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
+rm -rf %{buildroot}/%{static_content}/external/respondjs/respond.min.js
 ln -s %{_datadir}/javascript/respond.min.js \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
+    %{buildroot}/%{static_content}/external/respondjs/respond.min.js
 %endif
 
 # Save version info.
@@ -730,14 +735,9 @@ fi
 %dir %{_localstatedir}/lib/sympa/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/arc/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/bounce/
-%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/list_data
-%dir %{_localstatedir}/lib/sympa/static_content/
-%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/css/
-%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/pictures/
-%{_localstatedir}/lib/sympa/static_content/external/
-%{_localstatedir}/lib/sympa/static_content/fonts/
-%{_localstatedir}/lib/sympa/static_content/icons/
-%{_localstatedir}/lib/sympa/static_content/js/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/list_data/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/css/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/pictures/
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
 %{_datadir}/sympa/
 %{_mandir}/man1/*
@@ -782,6 +782,7 @@ fi
 %changelog
 * Mon Mar 05 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.2.b.2
 - Update to 6.2.25 beta 2.
+- Move static_content to an FHS compliant location.
 
 * Tue Feb 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.1.b.1
 - Update to 6.2.25 beta 1.
