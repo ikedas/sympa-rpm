@@ -504,12 +504,6 @@ for conffile in \
     do cp -a %{buildroot}%{_datadir}/%{name}/default/$conffile \
         %{buildroot}%{_sysconfdir}/%{name}/;
 done
-for confdir in \
-    create_list_templates global_task_models list_task_models scenari \
-    mail_tt2 web_tt2 custom_actions custom_conditions data_sources families \
-    search_filters ;
-    do mkdir %{buildroot}%{_sysconfdir}/$confdir
-done
 
 
 %check
@@ -782,6 +776,7 @@ fi
 %changelog
 * Tue Feb 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.1.b.1
 - Update to 6.2.25 beta 1.
+- Remove useless and bogus directories creation for conf override.
 
 * Tue Dec 26 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-2
 - Ensure newaliases works out of the box.
