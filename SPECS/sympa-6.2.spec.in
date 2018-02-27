@@ -366,15 +366,12 @@ autoreconf --install
     --with-cgidir=%{_libexecdir}/sympa \
     --with-confdir=%{_sysconfdir}/sympa \
 %if %{use_systemd}
-    --with-piddir=%{_rundir}/sympa \
-%else
-    --with-piddir=%{_localstatedir}/run/sympa/ \
-%endif
-%if %{use_systemd}
     --without-initdir \
     --with-unitsdir=%{_unitdir} \
+    --with-piddir=%{_rundir}/sympa \
 %else
     --with-initdir=%{_initrddir} \
+    --with-piddir=%{_localstatedir}/run/sympa/ \
 %endif
     --with-smrshdir=%{_sysconfdir}/smrsh \
     --with-aliases_file=%{_localstatedir}/lib/sympa/sympa_aliases \
@@ -790,6 +787,7 @@ fi
 - Own the now properly created css and pictures directories.
   Subsequently the above directory doesn't need to be writable anymore.
 - Unbundle Raleway font.
+- Simplify sysvinit/systemd in configure.
 
 * Tue Dec 26 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-2
 - Ensure newaliases works out of the box.
