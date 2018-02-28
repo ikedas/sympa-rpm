@@ -534,6 +534,24 @@ getent passwd sympa >/dev/null || \
       -c "System User for Sympa" \
       -s "/sbin/nologin" \
       sympa
+
+# Fix CSS and pictures paths
+if [ $1 -gt 1 ]; then
+    if [ -d %{_localstatedir}/lib/%{name}/static_content/css ]; then
+        mv -fu %{_localstatedir}/lib/%{name}/static_content/css/* \
+            %{_localstatedir}/lib/%{name}/css/ \
+            && rm -rf %{_localstatedir}/lib/%{name}/static_content/css/
+    fi
+    if [ -d %{_localstatedir}/lib/%{name}/static_content/pictures ]; then
+        mv -fu %{_localstatedir}/lib/%{name}/static_content/pictures/* \
+            %{_localstatedir}/lib/%{name}/pictures/ \
+            && rm -rf %{_localstatedir}/lib/%{name}/static_content/pictures/
+    fi
+    if [ ! -d %{_localstatedir}/lib/%{name}/static_content/css \
+        -a ! -d %{_localstatedir}/lib/%{name}/static_content/pictures ]; then
+        rm -r %{_localstatedir}/lib/%{name}/static_content/
+    fi
+fi
 exit 0
 
 
