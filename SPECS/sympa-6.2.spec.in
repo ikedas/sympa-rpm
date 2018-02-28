@@ -15,11 +15,11 @@
 %global unbundle_modernizr      0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-%global pre_rel b.1
+%global pre_rel b.2
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -723,7 +723,6 @@ fi
 %attr(4755,sympa,sympa) %{_libexecdir}/sympa/familyqueue
 %attr(4755,sympa,sympa) %{_libexecdir}/sympa/queue
 %attr(4750,root,sympa) %{_libexecdir}/sympa/sympa_newaliases-wrapper
-%attr(0750,sympa,sympa) %{_libexecdir}/sympa/sympa_smtpc
 %{_libexecdir}/sympa/sympa_soap_server.fcgi
 %attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
 %{_libexecdir}/sympa/wwsympa.fcgi
@@ -781,6 +780,9 @@ fi
 
 
 %changelog
+* Mon Mar 05 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.2.b.2
+- Update to 6.2.25 beta 2.
+
 * Tue Feb 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.1.b.1
 - Update to 6.2.25 beta 1.
 - Remove useless and bogus directories creation for conf override.
