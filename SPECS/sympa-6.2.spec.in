@@ -196,7 +196,7 @@ Requires:    fontawesome-fonts-web
 %if %{unbundle_raleway}
 Requires:    impallari-raleway-fonts
 %endif
-# FIXME: foundation icons 
+# FIXME: foundation icons
 #        See https://fedoraproject.org/wiki/Foundation_icons_font
 #            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
 
