@@ -4,6 +4,8 @@
 %global use_systemd 0
 %endif
 
+%global unbundle_raleway        0%{?fedora}
+
 %global unbundle_foundation     0
 %global unbundle_html5shiv      0%{?fedora}
 %global unbundle_jquery         0%{?fedora}
@@ -13,11 +15,11 @@
 %global unbundle_modernizr      0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-#global pre_rel b.3
+%global pre_rel b.1
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -189,11 +191,12 @@ Requires:    perl(Unicode::Normalize)
 
 # Bundled fonts
 Requires:    fontawesome-fonts-web
+%if %{unbundle_raleway}
+Requires:    impallari-raleway-fonts
+%endif
 # FIXME: foundation icons 
 #        See https://fedoraproject.org/wiki/Foundation_icons_font
 #            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
-# FIXME: raleway
-#        See https://bugzilla.redhat.com/show_bug.cgi?id=1525401
 
 # Bundled javascript libs
 # foundation
@@ -363,15 +366,12 @@ autoreconf --install
     --with-cgidir=%{_libexecdir}/sympa \
     --with-confdir=%{_sysconfdir}/sympa \
 %if %{use_systemd}
-    --with-piddir=%{_rundir}/sympa \
-%else
-    --with-piddir=%{_localstatedir}/run/sympa/ \
-%endif
-%if %{use_systemd}
     --without-initdir \
     --with-unitsdir=%{_unitdir} \
+    --with-piddir=%{_rundir}/sympa \
 %else
     --with-initdir=%{_initrddir} \
+    --with-piddir=%{_localstatedir}/run/sympa/ \
 %endif
     --with-smrshdir=%{_sysconfdir}/smrsh \
     --with-aliases_file=%{_localstatedir}/lib/sympa/sympa_aliases \
@@ -397,8 +397,13 @@ chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
 
 # Unbundle fonts from static_content/external/font-awesome
 rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome
+# Unbundle fonts from static_content/fonts/Raleway
+%if %{unbundle_raleway}
+rm -f %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
+    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+%endif
 # FIXME: Unbundle static_content/fonts/foundation-icons
-# FIXME: Unbundle static_content/fonts/Raleway
 
 # Unbundle javascript libraries from static_content/external
 # FIXME : foundation
@@ -503,12 +508,6 @@ for conffile in \
     mime.types sympa.wsdl ;
     do cp -a %{buildroot}%{_datadir}/%{name}/default/$conffile \
         %{buildroot}%{_sysconfdir}/%{name}/;
-done
-for confdir in \
-    create_list_templates global_task_models list_task_models scenari \
-    mail_tt2 web_tt2 custom_actions custom_conditions data_sources families \
-    search_filters ;
-    do mkdir %{buildroot}%{_sysconfdir}/$confdir
 done
 
 
@@ -733,7 +732,9 @@ fi
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/arc/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/bounce/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/list_data
-%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/
+%dir %{_localstatedir}/lib/sympa/static_content/
+%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/css/
+%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/pictures/
 %{_localstatedir}/lib/sympa/static_content/external/
 %{_localstatedir}/lib/sympa/static_content/fonts/
 %{_localstatedir}/lib/sympa/static_content/icons/
@@ -780,6 +781,14 @@ fi
 
 
 %changelog
+* Tue Feb 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.1.b.1
+- Update to 6.2.25 beta 1.
+- Remove useless and bogus directories creation for conf override.
+- Own the now properly created css and pictures directories.
+  Subsequently the above directory doesn't need to be writable anymore.
+- Unbundle Raleway font.
+- Simplify sysvinit/systemd in configure.
+
 * Tue Dec 26 2017 Xavier Bachelot <xavier@bachelot.org> 6.2.24-2
 - Ensure newaliases works out of the box.
 
