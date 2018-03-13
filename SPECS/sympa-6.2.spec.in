@@ -170,6 +170,7 @@ Requires:    perl(FCGI)
 Requires:    perl(AuthCAS)
 Requires:    perl(Clone)
 Requires:    perl(Crypt::CipherSaber)
+Requires:    perl(Crypt::Eksblowfish)
 Requires:    perl(Crypt::OpenSSL::X509)
 Requires:    perl(Crypt::SMIME)
 Requires:    perl(Data::Password)
@@ -800,6 +801,7 @@ fi
 %changelog
 * Tue Mar 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.3.b.3
 - Update to 6.2.25 beta 3.
+- Add Requires on optional Crypt::Eksblowfish.
 
 * Mon Mar 05 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.2.b.2
 - Update to 6.2.25 beta 2.
