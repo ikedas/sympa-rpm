@@ -4,6 +4,8 @@
 %global use_systemd 0
 %endif
 
+%global static_content %{_datadir}/sympa/static_content
+
 %global unbundle_raleway        0%{?fedora}
 
 %global unbundle_foundation     0
@@ -15,11 +17,11 @@
 %global unbundle_modernizr      0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-%global pre_rel b.1
+%global pre_rel b.3
 
 Name:        sympa
 Version:     @VERSION@
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}@REV@%{?dist}
+Release:     %{?pre_rel:0.}3%{?pre_rel:.%pre_rel}@REV@%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -168,6 +170,7 @@ Requires:    perl(FCGI)
 Requires:    perl(AuthCAS)
 Requires:    perl(Clone)
 Requires:    perl(Crypt::CipherSaber)
+Requires:    perl(Crypt::Eksblowfish)
 Requires:    perl(Crypt::OpenSSL::X509)
 Requires:    perl(Crypt::SMIME)
 Requires:    perl(Data::Password)
@@ -194,7 +197,7 @@ Requires:    fontawesome-fonts-web
 %if %{unbundle_raleway}
 Requires:    impallari-raleway-fonts
 %endif
-# FIXME: foundation icons 
+# FIXME: foundation icons
 #        See https://fedoraproject.org/wiki/Foundation_icons_font
 #            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
 
@@ -376,6 +379,9 @@ autoreconf --install
     --with-smrshdir=%{_sysconfdir}/smrsh \
     --with-aliases_file=%{_localstatedir}/lib/sympa/sympa_aliases \
     --with-perl=%{_bindir}/perl \
+    --with-staticdir=%{static_content} \
+    --with-cssdir=%{_localstatedir}/lib/sympa/css \
+    --with-picturesdir=%{_localstatedir}/lib/sympa/pictures \
     INSTALL_DATA='install -c -p -m 644'
 %make_build
 
@@ -396,12 +402,12 @@ pushd po/web_help; rm -f stamp-po; make; popd
 chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
 
 # Unbundle fonts from static_content/external/font-awesome
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/font-awesome
+rm -rf %{buildroot}/%{static_content}/external/font-awesome
 # Unbundle fonts from static_content/fonts/Raleway
 %if %{unbundle_raleway}
-rm -f %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+rm -f %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/fonts/Raleway/Raleway-Regular.otf
+    %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 %endif
 # FIXME: Unbundle static_content/fonts/foundation-icons
 
@@ -409,15 +415,15 @@ ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
 # FIXME : foundation
 # html5shiv
 %if %{unbundle_html5shiv}
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+rm -rf %{buildroot}/%{static_content}/external/html5shiv/html5shiv.js
 ln -s %{_datadir}/javascript/html5shiv.js \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/html5shiv/html5shiv.js
+    %{buildroot}/%{static_content}/external/html5shiv/html5shiv.js
 %endif
 # jquery
 %if %{unbundle_jquery}
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+rm -rf %{buildroot}/%{static_content}/external/jquery.js
 ln -s %{_datadir}/javascript/jquery/3/jquery.js \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/jquery.js
+    %{buildroot}/%{static_content}/external/jquery.js
 %endif
 # FIXME : jquery-migrate
 # FIXME : jquery-ui
@@ -425,9 +431,9 @@ ln -s %{_datadir}/javascript/jquery/3/jquery.js \
 # FIXME : modernizr
 # respond
 %if %{unbundle_respond}
-rm -rf %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
+rm -rf %{buildroot}/%{static_content}/external/respondjs/respond.min.js
 ln -s %{_datadir}/javascript/respond.min.js \
-    %{buildroot}/%{_localstatedir}/lib/sympa/static_content/external/respondjs/respond.min.js
+    %{buildroot}/%{static_content}/external/respondjs/respond.min.js
 %endif
 
 # Save version info.
@@ -529,6 +535,24 @@ getent passwd sympa >/dev/null || \
       -c "System User for Sympa" \
       -s "/sbin/nologin" \
       sympa
+
+# Fix CSS and pictures paths
+if [ $1 -gt 1 ]; then
+    if [ -d %{_localstatedir}/lib/%{name}/static_content/css ]; then
+        mv -fu %{_localstatedir}/lib/%{name}/static_content/css/* \
+            %{_localstatedir}/lib/%{name}/css/ \
+            && rm -rf %{_localstatedir}/lib/%{name}/static_content/css/
+    fi
+    if [ -d %{_localstatedir}/lib/%{name}/static_content/pictures ]; then
+        mv -fu %{_localstatedir}/lib/%{name}/static_content/pictures/* \
+            %{_localstatedir}/lib/%{name}/pictures/ \
+            && rm -rf %{_localstatedir}/lib/%{name}/static_content/pictures/
+    fi
+    if [ ! -d %{_localstatedir}/lib/%{name}/static_content/css \
+        -a ! -d %{_localstatedir}/lib/%{name}/static_content/pictures ]; then
+        rm -r %{_localstatedir}/lib/%{name}/static_content/
+    fi
+fi
 exit 0
 
 
@@ -723,7 +747,6 @@ fi
 %attr(4755,sympa,sympa) %{_libexecdir}/sympa/familyqueue
 %attr(4755,sympa,sympa) %{_libexecdir}/sympa/queue
 %attr(4750,root,sympa) %{_libexecdir}/sympa/sympa_newaliases-wrapper
-%attr(0750,sympa,sympa) %{_libexecdir}/sympa/sympa_smtpc
 %{_libexecdir}/sympa/sympa_soap_server.fcgi
 %attr(6755,sympa,sympa) %{_libexecdir}/sympa/sympa_soap_server-wrapper.fcgi
 %{_libexecdir}/sympa/wwsympa.fcgi
@@ -731,14 +754,9 @@ fi
 %dir %{_localstatedir}/lib/sympa/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/arc/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/bounce/
-%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/list_data
-%dir %{_localstatedir}/lib/sympa/static_content/
-%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/css/
-%dir %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/static_content/pictures/
-%{_localstatedir}/lib/sympa/static_content/external/
-%{_localstatedir}/lib/sympa/static_content/fonts/
-%{_localstatedir}/lib/sympa/static_content/icons/
-%{_localstatedir}/lib/sympa/static_content/js/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/list_data/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/css/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/pictures/
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
 %{_datadir}/sympa/
 %{_mandir}/man1/*
@@ -781,6 +799,14 @@ fi
 
 
 %changelog
+* Tue Mar 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.3.b.3
+- Update to 6.2.25 beta 3.
+- Add Requires on optional Crypt::Eksblowfish.
+
+* Mon Mar 05 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.2.b.2
+- Update to 6.2.25 beta 2.
+- Move static_content to an FHS compliant location.
+
 * Tue Feb 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.1.b.1
 - Update to 6.2.25 beta 1.
 - Remove useless and bogus directories creation for conf override.
