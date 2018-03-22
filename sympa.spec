@@ -547,7 +547,8 @@ if [ $1 -gt 1 ]; then
             && rm -rf %{_localstatedir}/lib/%{name}/static_content/pictures/
     fi
     if [ ! -d %{_localstatedir}/lib/%{name}/static_content/css \
-        -a ! -d %{_localstatedir}/lib/%{name}/static_content/pictures ]; then
+        -a ! -d %{_localstatedir}/lib/%{name}/static_content/pictures \
+        -a -d %{_localstatedir}/lib/%{name}/static_content ]; then
         rm -r %{_localstatedir}/lib/%{name}/static_content/
     fi
 fi
@@ -799,6 +800,7 @@ fi
 %changelog
 * Tue Mar 20 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.26-1
 - Update to 6.2.26.
+- Fix scriptlet.
 
 * Tue Mar 13 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.25-0.3.b.3
 - Update to 6.2.25 beta 3.
