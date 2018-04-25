@@ -21,7 +21,7 @@
 
 Name:        sympa
 Version:     6.2.32
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -164,6 +164,12 @@ Requires:    smtpdaemon
 Requires:    mhonarc
 Requires:    perl(DBD::mysql)
 Requires:    perl(FCGI)
+
+# Missing Requires on EL6 and EL7
+%if 0%{?el6}%{?el7}
+Requires:    perl(HTML::FormatText)
+Requires:    perl(HTML::StripScripts::Parser)
+%endif
 
 # Optional CPAN packages
 Requires:    perl(AuthCAS)
@@ -798,6 +804,9 @@ fi
 
 
 %changelog
+* Wed Apr 25 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.32-2
+- Add missing Requires on EL6 and EL7.
+
 * Thu Apr 19 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.32-1
 - Update to 6.2.32 (Security release).
   See https://sympa-community.github.io/security/2018-001.html
