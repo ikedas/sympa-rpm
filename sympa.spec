@@ -14,14 +14,13 @@
 %global unbundle_jquery_migrate 0
 %global unbundle_jquery_ui      0
 %global unbundle_jqplot         0
-%global unbundle_modernizr      0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-#global pre_rel b.3
+%global pre_rel b.2
 
 Name:        sympa
-Version:     6.2.32
-Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
+Version:     6.2.33
+Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -76,6 +75,7 @@ BuildRequires: perl(Cwd)
 BuildRequires: perl(Data::Password)
 BuildRequires: perl(DateTime)
 BuildRequires: perl(DateTime::Format::Mail)
+BuildRequires: perl(DBD::SQLite)
 BuildRequires: perl(DBI)
 BuildRequires: perl(Digest::MD5)
 BuildRequires: perl(Encode)
@@ -209,16 +209,11 @@ Requires:    impallari-raleway-fonts
 # Bundled javascript libs
 # foundation
 %if %{unbundle_foundation}
-Requires:    js-foundation5
+Requires:    js-foundation6
 %else
-Provides:    bundled(js-foundation) = 5.5.3
+Provides:    bundled(js-foundation) = 6.4.2
 # Bundled in bundled js-foundation
-Provides:    bundled(js-fastclick)
-Provides:    bundled(js-jquery-cookie) = 1.4.1
-Provides:    bundled(js-jquery-requestAnimationFrame)
-Provides:    bundled(js-modernizr) = 2.8.3
-Provides:    bundled(js-placeholder) = 2.0.9
-Provides:    bundled(js-sizzle) = 2.2.0
+Provides:    bundled(js-what-input) = 4.2.0
 %endif
 # html5shiv
 %if %{unbundle_html5shiv}
@@ -249,12 +244,6 @@ Provides:    bundled(js-jquery-ui) = 1.12.1
 Requires:    js-jqplot
 %else
 Provides:    bundled(js-jquery-jqplot) = 1.0.8
-%endif
-# modernizr
-%if %{unbundle_modernizr}
-Requires:    js-modernizr2
-%else
-Provides:    bundled(js-modernizr) = 2.6.2
 %endif
 # respond
 %if %{unbundle_respond}
@@ -405,8 +394,8 @@ pushd po/web_help; rm -f stamp-po; make; popd
 # Fix perm to prevent warning by rpmlint.
 chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
 
-# Unbundle fonts from static_content/external/font-awesome
-rm -rf %{buildroot}/%{static_content}/external/font-awesome
+# Unbundle fonts from static_content/fonts/font-awesome
+rm -rf %{buildroot}/%{static_content}/fonts/font-awesome
 # Unbundle fonts from static_content/fonts/Raleway
 %if %{unbundle_raleway}
 rm -f %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
@@ -415,29 +404,28 @@ ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
 %endif
 # FIXME: Unbundle static_content/fonts/foundation-icons
 
-# Unbundle javascript libraries from static_content/external
-# FIXME : foundation
+# Unbundle javascript libraries from static_content/js
+# FIXME : foundation (Foundation for Sites 6, with float grid support)
 # html5shiv
 %if %{unbundle_html5shiv}
-rm -rf %{buildroot}/%{static_content}/external/html5shiv/html5shiv.js
+rm -rf %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
 ln -s %{_datadir}/javascript/html5shiv.js \
-    %{buildroot}/%{static_content}/external/html5shiv/html5shiv.js
+    %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
 %endif
 # jquery
 %if %{unbundle_jquery}
-rm -rf %{buildroot}/%{static_content}/external/jquery.js
+rm -rf %{buildroot}/%{static_content}/js/jquery.js
 ln -s %{_datadir}/javascript/jquery/3/jquery.js \
-    %{buildroot}/%{static_content}/external/jquery.js
+    %{buildroot}/%{static_content}/js/jquery.js
 %endif
 # FIXME : jquery-migrate
 # FIXME : jquery-ui
 # FIXME : jqplot
-# FIXME : modernizr
 # respond
 %if %{unbundle_respond}
-rm -rf %{buildroot}/%{static_content}/external/respondjs/respond.min.js
+rm -rf %{buildroot}/%{static_content}/js/respondjs/respond.min.js
 ln -s %{_datadir}/javascript/respond.min.js \
-    %{buildroot}/%{static_content}/external/respondjs/respond.min.js
+    %{buildroot}/%{static_content}/js/respondjs/respond.min.js
 %endif
 
 # Save version info.
@@ -804,6 +792,12 @@ fi
 
 
 %changelog
+* Fri Jun 29 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.33-0.2.b.2
+- Update to 6.2.33 beta 2.
+  Upstream #170 WWSympa: Switch to Foundation 6
+  Upstream #220 static_content directory structure
+  Upstream #336 Starting a test framework
+
 * Wed Apr 25 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.32-2
 - Add missing Requires on EL6 and EL7.
 
