@@ -29,7 +29,7 @@ URL:         http://www.sympa.org
 Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
 Source100:   sympa-httpd22-fcgid.conf
-Source101:   sympa-httpd24-fcgid.conf
+Source101:   sympa-httpd24-spawn_fcgi.conf
 Source102:   sympa-lighttpd.conf
 Source103:   sympa-nginx-spawn_fcgi.conf
 Source104:   sympa-wwsympa.init
@@ -260,7 +260,11 @@ Summary(fr): Sympa avec Serveur HTTP Apache
 Summary(ja): SympaのApache HTTP Server対応
 Requires: %{name} = %{version}-%{release}
 Requires: httpd
+%if 0%{?fedora} || 0%{?rhel} >= 7
+Requires: spawn-fcgi
+%else
 Requires: mod_fcgid
+%endif
 Conflicts: %{name}-lighttpd, %{name}-nginx
 
 
@@ -779,6 +783,15 @@ fi
 
 %files httpd
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/sympa.conf
+%if 0%{?fedora} || 0%{?rhel} >= 7
+%if %{use_systemd}
+%{_unitdir}/wwsympa.service
+%{_unitdir}/sympasoap.service
+%else
+%{_initrddir}/wwsympa
+%{_initrddir}/sympasoap
+%endif
+%endif
 
 
 %files lighttpd
