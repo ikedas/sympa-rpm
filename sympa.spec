@@ -32,8 +32,8 @@ Source100:   sympa-httpd22-fcgid.conf
 Source101:   sympa-httpd24-fcgid.conf
 Source102:   sympa-lighttpd.conf
 Source103:   sympa-nginx-spawn_fcgi.conf
-Source104:   sympa-nginx-wwsympa-6.2.init
-Source105:   sympa-nginx-sympasoap-6.2.init
+Source104:   sympa-wwsympa.init
+Source105:   sympa-sympasoap.init
 Source106:   sympa-rsyslog.conf
 Source107:   sympa-logrotate.conf
 Source112:   sympa-sysvinit-README.RPM.md
@@ -41,6 +41,7 @@ Source113:   sympa-systemd-README.RPM.md
 Source114:   aliases.sympa.sendmail
 Source115:   aliases.sympa.postfix
 Source129:   sympa.service.d-dependencies.conf
+Source130:   sympa-sysconfig
 
 # Add path to MHonArc::UTF8 so that sympa_wizard won't miss it
 Patch5:      sympa-6.2a.40-r11708-wizard-mhonarc.patch
@@ -461,6 +462,9 @@ install -m 0755 %{SOURCE104} %{buildroot}%{_initrddir}/wwsympa
 install -m 0755 %{SOURCE105} %{buildroot}%{_initrddir}/sympasoap
 %endif
 
+# Copy system config file.
+install -m 0644 %{SOURCE130} %{buildroot}%{_sysconfdir}/sysconfig/sympa
+
 # Copy docs.
 mv %{buildroot}%{_docdir}/%{name} __doc
 cp -p AUTHORS.md CONTRIBUTING.md NEWS.md OChangeLog ONEWS README.md __doc/
@@ -770,6 +774,7 @@ fi
 %{_initrddir}/sympa
 %attr(-,sympa,sympa) %{_localstatedir}/run/sympa/
 %endif
+%config(noreplace) %{_sysconfdir}/sysconfig/sympa
 
 
 %files httpd
