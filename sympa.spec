@@ -810,9 +810,12 @@ fi
 
 
 %changelog
-* Sun Aug 26 2018 IKEDA Soji <ikeda@cinversion.co.jp> 6.2.35-0.1.b.1
+* Sun Aug 26 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.35-0.1.b.1
 - Update to 6.2.35b.1.
 - For sympa-httpd with Fedora & EL7: Use mod_proxy_fcgi instead of mod_fcgid.
+
+* Sun Aug 26 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.34-2
+- Issue #36: Init scripts for wwsympa/sympasoap were broken.
 
 * Thu Jul 05 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.34-1
 - Update to 6.2.34.
