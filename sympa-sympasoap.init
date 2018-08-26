@@ -1,0 +1,94 @@
+#!/bin/sh
+#
+# sympasoap                     Sympa SOAP Interface
+#
+# Written by IKEDA Soji  2017-07-19
+#
+# chkconfig: - 95 05
+# description: sympa is a powerful mailing lists management system.
+# processname: nginx
+# config:      /etc/sympa/sympa.conf
+# config:      /etc/sysconfig/sympa
+# pidfile:     /var/run/sympa/sympasoap.pid
+
+if [ -f /etc/rc.d/init.d/functions ]; then
+    . /etc/rc.d/init.d/functions
+fi
+
+FCGI_CHILDREN=5
+FCGI_USER=sympa
+FCGI_GROUP=sympa
+FCGI_PID_DIR=/var/run/sympa
+FCGI_OPTS='-M 0600 -U nginx'
+if [ -e /etc/sysconfig/sympa ]; then
+    . /etc/sysconfig/sympa
+fi
+
+prog=sympasoap
+pidfile="${FCGI_PID_DIR}/${prog}.pid"
+lockfile="/var/lock/subsys/${prog}"
+
+socketfile="${FCGI_PID_DIR}/${prog}.socket"
+fcgiapp="/usr/libexec/sympa/sympa_soap_server.fcgi"
+sympaconf="/etc/sympa/sympa.conf"
+
+start() {
+    [ -x $fcgiapp ] || exit 5
+    [ -f $sympaconf ] || exit 6
+    echo -n $"Starting $prog: "
+    daemon /usr/bin/spawn-fcgi \
+        -F ${FCGI_CHILDREN} -P $pidfile -s $socketfile \
+        -u ${FCGI_USER} -g ${FCGI_GROUP} ${FCGI_OPTS} -- \
+        $fcgiapp
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc -p $pidfile $(basename $fcgiapp)
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+rh_status() {
+    status $(basename $fcgiapp)
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    status)
+        rh_$1
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 7
+        restart
+            ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 2
+esac
+
