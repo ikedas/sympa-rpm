@@ -16,11 +16,11 @@
 %global unbundle_jqplot         0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-#global pre_rel b.2
+global pre_rel b.1
 
 Name:        sympa
-Version:     6.2.34
-Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
+Version:     6.2.35
+Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -29,7 +29,7 @@ URL:         http://www.sympa.org
 Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
 Source100:   sympa-httpd22-fcgid.conf
-Source101:   sympa-httpd24-fcgid.conf
+Source101:   sympa-httpd24-spawn_fcgi.conf
 Source102:   sympa-lighttpd.conf
 Source103:   sympa-nginx-spawn_fcgi.conf
 Source104:   sympa-wwsympa.init
@@ -260,7 +260,11 @@ Summary(fr): Sympa avec Serveur HTTP Apache
 Summary(ja): SympaのApache HTTP Server対応
 Requires: %{name} = %{version}-%{release}
 Requires: httpd
+%if 0%{?fedora} || 0%{?rhel} >= 7
+Requires: spawn-fcgi
+%else
 Requires: mod_fcgid
+%endif
 Conflicts: %{name}-lighttpd, %{name}-nginx
 
 
@@ -779,6 +783,15 @@ fi
 
 %files httpd
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/sympa.conf
+%if 0%{?fedora} || 0%{?rhel} >= 7
+%if %{use_systemd}
+%{_unitdir}/wwsympa.service
+%{_unitdir}/sympasoap.service
+%else
+%{_initrddir}/wwsympa
+%{_initrddir}/sympasoap
+%endif
+%endif
 
 
 %files lighttpd
@@ -797,6 +810,10 @@ fi
 
 
 %changelog
+* Sun Aug 26 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.35-0.1.b.1
+- Update to 6.2.35b.1.
+- For sympa-httpd with Fedora & EL7: Use mod_proxy_fcgi instead of mod_fcgid.
+
 * Sun Aug 26 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.34-2
 - Issue #36: Init scripts for wwsympa/sympasoap were broken.
 
