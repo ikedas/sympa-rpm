@@ -467,6 +467,7 @@ install -m 0755 %{SOURCE105} %{buildroot}%{_initrddir}/sympasoap
 %endif
 
 # Copy system config file.
+mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
 install -m 0644 %{SOURCE130} %{buildroot}%{_sysconfdir}/sysconfig/sympa
 
 # Copy docs.
