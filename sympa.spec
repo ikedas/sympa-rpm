@@ -16,10 +16,10 @@
 %global unbundle_jqplot         0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-#global pre_rel b.2
+global pre_rel b.1
 
 Name:        sympa
-Version:     6.2.34
+Version:     6.2.35
 Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
@@ -810,6 +810,10 @@ fi
 
 
 %changelog
+* Sun Aug 26 2018 IKEDA Soji <ikeda@cinversion.co.jp> 6.2.35-0.1.b.1
+- Update to 6.2.35b.1.
+- For sympa-httpd with Fedora & EL7: Use mod_proxy_fcgi instead of mod_fcgid.
+
 * Thu Jul 05 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.34-1
 - Update to 6.2.34.
 
