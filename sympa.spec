@@ -16,10 +16,10 @@
 %global unbundle_jqplot         0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-%global pre_rel b.1
+#%global pre_rel b.1
 
 Name:        sympa
-Version:     6.2.35
+Version:     6.2.36
 Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
@@ -451,9 +451,9 @@ install -m 0644 %{SOURCE103} %{buildroot}%{_sysconfdir}/nginx/conf.d/sympa.conf
 
 # Copy init scripts or unit files for nginx/spawn-fcgi etc.
 %if %{use_systemd}
-install -m 0644 src/etc/script/nginx-wwsympa.service \
+install -m 0644 src/etc/script/wwsympa.service \
     %{buildroot}%{_unitdir}/wwsympa.service
-install -m 0644 src/etc/script/nginx-sympasoap.service \
+install -m 0644 src/etc/script/sympasoap.service \
     %{buildroot}%{_unitdir}/sympasoap.service
 mkdir -p %{buildroot}%{_tmpfilesdir}
 install -m 0644 src/etc/script/sympa-tmpfiles.conf \
@@ -811,6 +811,9 @@ fi
 
 
 %changelog
+* Sun Sep 23 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.36-1
+- Update to 6.2.36.
+
 * Sun Aug 26 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.35-0.1.b.1
 - Update to 6.2.35b.1.
 - For sympa-httpd with Fedora & EL7: Use mod_proxy_fcgi instead of mod_fcgid.
