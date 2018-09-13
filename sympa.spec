@@ -16,7 +16,7 @@
 %global unbundle_jqplot         0
 %global unbundle_respond        0%{?fedora}%{?rhel}
 
-#%global pre_rel b.1
+#global pre_rel b.1
 
 Name:        sympa
 Version:     6.2.36
