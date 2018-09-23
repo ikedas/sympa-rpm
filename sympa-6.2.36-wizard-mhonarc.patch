@@ -1,6 +1,6 @@
---- src/sbin/sympa_wizard.pl.in.mhonarc	2014-11-25 13:27:07.000000000 +0900
-+++ src/sbin/sympa_wizard.pl.in	2014-11-25 13:52:58.088456116 +0900
-@@ -23,7 +23,8 @@
+--- src/sbin/sympa_wizard.pl.in.mhonarc	2018-09-21 10:39:54.000000000 +0900
++++ src/sbin/sympa_wizard.pl.in	2018-09-23 19:15:16.177106602 +0900
+@@ -26,7 +26,8 @@
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
@@ -9,4 +9,4 @@
 +        /usr/share/MHonArc);
  use strict;
  use warnings;
- use English qw(-no_match_vars);
+ use Encode qw();

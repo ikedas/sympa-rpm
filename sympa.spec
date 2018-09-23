@@ -44,7 +44,7 @@ Source129:   sympa.service.d-dependencies.conf
 Source130:   sympa-sysconfig
 
 # Add path to MHonArc::UTF8 so that sympa_wizard won't miss it
-Patch5:      sympa-6.2a.40-r11708-wizard-mhonarc.patch
+Patch5:      sympa-6.2.36-wizard-mhonarc.patch
 # RPM specific customization of site defaults
 Patch13:     sympa-6.2.19b.1-confdef.patch
 # Disable sympa service by default
