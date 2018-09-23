@@ -396,9 +396,6 @@ pushd po/web_help; rm -f stamp-po; make; popd
 %find_lang %{name}
 %find_lang web_help
 
-# Fix perm to prevent warning by rpmlint.
-chmod a-x %{buildroot}%{_datadir}/%{name}/bin/create_db.Sybase
-
 # Unbundle fonts from static_content/fonts/font-awesome
 rm -rf %{buildroot}/%{static_content}/fonts/font-awesome
 # Unbundle fonts from static_content/fonts/Raleway
