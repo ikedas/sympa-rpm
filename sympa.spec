@@ -15,6 +15,7 @@
 %global unbundle_html5shiv      0%{?fedora}
 %global unbundle_jquery         0%{?fedora}
 %global unbundle_jquery_migrate 0
+%global unbundle_jquery_minicolors 0
 %global unbundle_jquery_ui      0
 %global unbundle_jqplot         0
 %global unbundle_respond        0%{?fedora}%{?rhel}
@@ -242,6 +243,12 @@ Requires:    xstatic-jquery-migrate-common
 %else
 Provides:    bundled(js-jquery-migrate) = 1.4.1
 %endif
+# jquery-minicolors
+%if %{unbundle_jquery_minicolors}
+Requires:    js-jquery-minicolors
+%else
+Provides:    bundled(js-jquery-minicolors) = 2.3.1
+%endif
 # jquery-ui
 %if %{unbundle_jquery_ui}
 Requires:    xstatic-jquery-ui-common
@@ -466,6 +473,16 @@ ln -s %{_datadir}/javascript/jquery/3/jquery.js \
 rm -f %{buildroot}/%{static_content}/js/jquery-migrate.js
 ln -s %{_datadir}/javascript/jquery_migrate/jquery-migrate.js \
     %{buildroot}/%{static_content}/js/jquery-migrate.js
+%endif
+# FIXME : jquery-minicolors
+%if %{unbundle_jquery_minicolors}
+minicolors_files=$(find %{buildroot}/%{static_content}/js/jquery-minicolors/ -maxdepth 1 -type f -printf '%f\n')
+rm -f %{buildroot}/%{static_content}/js/jqpuery-minicolors/*
+for i in $minicolors_files
+do
+    ln -s %{_datadir}/javascript/jquery-minicolors/$i \
+        %{buildroot}/%{static_content}/js/jquery-minicolors/$i
+done
 %endif
 # FIXME : jquery-ui
 %if %{unbundle_jquery_ui}
