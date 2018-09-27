@@ -16,7 +16,7 @@
 %global unbundle_jquery            0%{?fedora}
 %global unbundle_jquery_migrate    0
 %global unbundle_jquery_minicolors 0
-%global unbundle_jquery_ui         0
+%global unbundle_jquery_ui         0%{?fedora}%{?el7}
 %global unbundle_jqplot            0
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
@@ -484,7 +484,7 @@ do
         %{buildroot}/%{static_content}/js/jquery-minicolors/$i
 done
 %endif
-# FIXME : jquery-ui
+# jquery-ui
 %if %{unbundle_jquery_ui}
 rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.js
 rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.css
