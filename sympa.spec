@@ -238,9 +238,9 @@ Provides:    bundled(js-jquery) = 3.2.1
 %endif
 # jquery-migrate
 %if %{unbundle_jquery_migrate}
-Requires:    js-jquery-migrate
+Requires:    xstatic-jquery-migrate-common
 %else
-Provides:    bundled(js-jquery-migrate) = 1.4.1 
+Provides:    bundled(js-jquery-migrate) = 1.4.1
 %endif
 # jquery-ui
 %if %{unbundle_jquery_ui}
