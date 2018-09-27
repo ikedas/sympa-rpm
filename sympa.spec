@@ -502,6 +502,15 @@ ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.css \
 #done
 %endif
 # FIXME : jqplot
+%if %{unbundle_jqplot}
+jqplot_files=$(find %{buildroot}/%{static_content}/js/jqplot/ -maxdepth 1 -type f -printf '%f\n')
+rm -f %{buildroot}/%{static_content}/js/jqplot/*
+for i in $jqplot_files
+do
+    ln -s %{_datadir}/javascript/jqplot/$i \
+        %{buildroot}/%{static_content}/js/jqplot/$i
+done
+%endif
 # respond
 %if %{unbundle_respond}
 rm -f %{buildroot}/%{static_content}/js/respondjs/respond.min.js
