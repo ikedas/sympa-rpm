@@ -410,13 +410,13 @@ ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
 # FIXME : foundation (Foundation for Sites 6, with float grid support)
 # html5shiv
 %if %{unbundle_html5shiv}
-rm -rf %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
+rm -f %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
 ln -s %{_datadir}/javascript/html5shiv.js \
     %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
 %endif
 # jquery
 %if %{unbundle_jquery}
-rm -rf %{buildroot}/%{static_content}/js/jquery.js
+rm -f %{buildroot}/%{static_content}/js/jquery.js
 ln -s %{_datadir}/javascript/jquery/3/jquery.js \
     %{buildroot}/%{static_content}/js/jquery.js
 %endif
@@ -425,7 +425,7 @@ ln -s %{_datadir}/javascript/jquery/3/jquery.js \
 # FIXME : jqplot
 # respond
 %if %{unbundle_respond}
-rm -rf %{buildroot}/%{static_content}/js/respondjs/respond.min.js
+rm -f %{buildroot}/%{static_content}/js/respondjs/respond.min.js
 ln -s %{_datadir}/javascript/respond.min.js \
     %{buildroot}/%{static_content}/js/respondjs/respond.min.js
 %endif
