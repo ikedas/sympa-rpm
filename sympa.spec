@@ -468,6 +468,22 @@ ln -s %{_datadir}/javascript/jquery_migrate/jquery-migrate.js \
     %{buildroot}/%{static_content}/js/jquery-migrate.js
 %endif
 # FIXME : jquery-ui
+%if %{unbundle_jquery_ui}
+rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.js
+rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.css
+ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.js \
+    %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.js
+ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.css \
+    %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.css
+# FIXME: Unbundle theme (smoothness ?)
+#theme_files=$(find %{buildroot}/%{static_content}/js/jquery-ui/images/ -maxdepth 1 -type f -printf '%f\n')
+#rm -f %{buildroot}/%{static_content}/js/jquery-ui/images/*
+#for i in $theme_files
+#do
+#    ln -s %{_datadir}/javascript/jquery_ui/themes/smoothness/images/$i \
+#        %{buildroot}/%{static_content}/js/jquery-ui/images/$i
+#done
+%endif
 # FIXME : jqplot
 # respond
 %if %{unbundle_respond}
