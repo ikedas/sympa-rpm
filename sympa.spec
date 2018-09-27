@@ -10,15 +10,15 @@
 %global unbundle_fontawesome       1
 %global unbundle_raleway           0%{?fedora}
 %global unbundle_foundation_icons  0
-
-%global unbundle_foundation     0
-%global unbundle_html5shiv      0%{?fedora}
-%global unbundle_jquery         0%{?fedora}
-%global unbundle_jquery_migrate 0
+# js
+%global unbundle_foundation        0
+%global unbundle_html5shiv         0%{?fedora}
+%global unbundle_jquery            0%{?fedora}
+%global unbundle_jquery_migrate    0
 %global unbundle_jquery_minicolors 0
-%global unbundle_jquery_ui      0
-%global unbundle_jqplot         0
-%global unbundle_respond        0%{?fedora}%{?rhel}
+%global unbundle_jquery_ui         0
+%global unbundle_jqplot            0
+%global unbundle_respond           0%{?fedora}%{?rhel}
 
 #global pre_rel b.1
 
