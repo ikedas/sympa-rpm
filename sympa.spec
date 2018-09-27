@@ -6,7 +6,10 @@
 
 %global static_content %{_datadir}/sympa/static_content
 
-%global unbundle_raleway        0%{?fedora}
+# fonts
+%global unbundle_fontawesome       1
+%global unbundle_raleway           0%{?fedora}
+%global unbundle_foundation_icons  0
 
 %global unbundle_foundation     0
 %global unbundle_html5shiv      0%{?fedora}
@@ -199,13 +202,18 @@ Requires:    perl(Unicode::CaseFold)
 Requires:    perl(Unicode::Normalize)
 
 # Bundled fonts
+%if %{unbundle_fontawesome}
 Requires:    fontawesome-fonts-web
+%endif
 %if %{unbundle_raleway}
 Requires:    impallari-raleway-fonts
 %endif
 # FIXME: foundation icons
 #        See https://fedoraproject.org/wiki/Foundation_icons_font
 #            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
+%if %{unbundle_foundation_icons}
+Requires:    foundation-icons-fonts
+%endif
 
 # Bundled javascript libs
 # foundation
@@ -396,15 +404,31 @@ pushd po/web_help; rm -f stamp-po; make; popd
 %find_lang %{name}
 %find_lang web_help
 
-# Unbundle fonts from static_content/fonts/font-awesome
-rm -rf %{buildroot}/%{static_content}/fonts/font-awesome
-# Unbundle fonts from static_content/fonts/Raleway
+# Unbundle fonts from static_content/fonts
+# font-awesome
+%if %{unbundle_fontawesome}
+fa_css_files=$(find %{buildroot}/%{static_content}/fonts/font-awesome/css/ -maxdepth 1 -type f -printf '%f\n')
+fa_fonts_files=$(find %{buildroot}/%{static_content}/fonts/font-awesome/fonts/ -maxdepth 1 -type f -printf '%f\n')
+rm -f %{buildroot}/%{static_content}/fonts/font-awesome/css/*
+rm -f %{buildroot}/%{static_content}/fonts/font-awesome/fonts/*
+for css in $fa_css_files
+do
+    ln -s %{_datadir}/font-awesome-web/css/$css \
+        %{buildroot}/%{static_content}/fonts/font-awesome/css/$css
+done
+for fonts in $fa_fonts_files
+do
+    ln -s %{_datadir}/fonts/fontawesome/$fonts \
+        %{buildroot}/%{static_content}/fonts/font-awesome/fonts/$fonts
+done
+%endif
+# Raleway
 %if %{unbundle_raleway}
 rm -f %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
     %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 %endif
-# FIXME: Unbundle static_content/fonts/foundation-icons
+# FIXME: foundation-icons
 
 # Unbundle javascript libraries from static_content/js
 # FIXME : foundation (Foundation for Sites 6, with float grid support)
