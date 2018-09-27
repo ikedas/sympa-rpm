@@ -462,6 +462,11 @@ ln -s %{_datadir}/javascript/jquery/3/jquery.js \
     %{buildroot}/%{static_content}/js/jquery.js
 %endif
 # FIXME : jquery-migrate
+%if %{unbundle_jquery_migrate}
+rm -f %{buildroot}/%{static_content}/js/jquery-migrate.js
+ln -s %{_datadir}/javascript/jquery_migrate/jquery-migrate.js \
+    %{buildroot}/%{static_content}/js/jquery-migrate.js
+%endif
 # FIXME : jquery-ui
 # FIXME : jqplot
 # respond
