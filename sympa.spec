@@ -432,6 +432,23 @@ ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
 
 # Unbundle javascript libraries from static_content/js
 # FIXME : foundation (Foundation for Sites 6, with float grid support)
+%if %{unbundle_foundation}
+rm -f %{buildroot}/%{static_content}/js/foundation/css/foundation-float.css
+rm -f %{buildroot}/%{static_content}/js/foundation/css/foundation-float.min.css
+ln -s %{_datadir}/javascript/foundation/css/foundation-float.css \
+    %{buildroot}/%{static_content}/js/foundation/css/foundation-float.css
+ln -s %{_datadir}/javascript/foundation/css/foundation-float.min.css \
+    %{buildroot}/%{static_content}/js/foundation/css/foundation-float.min.css
+rm -f %{buildroot}/%{static_content}/js/foundation/js/foundation.js
+rm -f %{buildroot}/%{static_content}/js/foundation/js/foundation.min.js
+ln -s %{_datadir}/javascript/foundation/js/foundation.js \
+    %{buildroot}/%{static_content}/js/foundation/js/foundation.js
+ln -s %{_datadir}/javascript/foundation/js/foundation.min.js \
+    %{buildroot}/%{static_content}/js/foundation/js/foundation.min.js
+#rm -f %{buildroot}/%{static_content}/js/foundation/js/vendor/what-input.js
+#ln -s %{_datadir}/javascript/what-input.js \
+#    %{buildroot}/%{static_content}/js/foundation/js/vendor/what-input.js
+%endif
 # html5shiv
 %if %{unbundle_html5shiv}
 rm -f %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
