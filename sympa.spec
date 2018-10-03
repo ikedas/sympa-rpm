@@ -648,6 +648,13 @@ if [ $1 -gt 1 ]; then
 fi
 
 
+%if 0%{?fedora} || 0%{?rhel} >= 7
+%post httpd
+# register service
+%systemd_post wwsympa.service
+%systemd_post sympasoap.service
+%endif
+
 %post nginx
 # register service
 %if %{use_systemd}
@@ -669,6 +676,12 @@ if [ $1 -eq 0 ] ; then
 fi
 %endif
 
+
+%if 0%{?fedora} || 0%{?rhel} >= 7
+%preun httpd
+%systemd_preun wwsympa.service
+%systemd_preun sympasoap.service
+%endif
 
 %preun nginx
 %if %{use_systemd}
@@ -693,6 +706,12 @@ if [ "$1" -ge "1" ] ; then
 fi
 %endif
 
+
+%if 0%{?fedora} || 0%{?rhel} >= 7
+%postun httpd
+%systemd_postun_with_restart wwsympa.service
+%systemd_postun_with_restart sympasoap.service
+%endif
 
 %postun nginx
 %if %{use_systemd}
