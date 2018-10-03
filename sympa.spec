@@ -6,17 +6,29 @@
 
 %global static_content %{_datadir}/sympa/static_content
 
-# fonts
+# Fonts
+#
 %global unbundle_fontawesome       1
+# Not available for EL
 %global unbundle_raleway           0%{?fedora}
+# Not available
 %global unbundle_foundation_icons  0
-# js
+
+# Javascripts
+# Not available
 %global unbundle_foundation        0
+# Not available for EL
 %global unbundle_html5shiv         0%{?fedora}
+# Not available for EL
 %global unbundle_jquery            0%{?fedora}
+# Available version is too old
 %global unbundle_jquery_migrate    0
+# Not available
 %global unbundle_jquery_minicolors 0
+# Not available for EL6
 %global unbundle_jquery_ui         0%{?fedora}%{?el7}
+# Not available
+#
 %global unbundle_jqplot            0
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
