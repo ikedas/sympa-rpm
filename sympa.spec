@@ -6,15 +6,31 @@
 
 %global static_content %{_datadir}/sympa/static_content
 
-%global unbundle_raleway        0%{?fedora}
+# Fonts
+#
+%global unbundle_fontawesome       1
+# Not available for EL
+%global unbundle_raleway           0%{?fedora}
+# Not available
+%global unbundle_foundation_icons  0
 
-%global unbundle_foundation     0
-%global unbundle_html5shiv      0%{?fedora}
-%global unbundle_jquery         0%{?fedora}
-%global unbundle_jquery_migrate 0
-%global unbundle_jquery_ui      0
-%global unbundle_jqplot         0
-%global unbundle_respond        0%{?fedora}%{?rhel}
+# Javascripts
+# Not available
+%global unbundle_foundation        0
+# Not available for EL
+%global unbundle_html5shiv         0%{?fedora}
+# Not available for EL
+%global unbundle_jquery            0%{?fedora}
+# Available version is too old
+%global unbundle_jquery_migrate    0
+# Not available
+%global unbundle_jquery_minicolors 0
+# Not available for EL6
+%global unbundle_jquery_ui         0%{?fedora}%{?el7}
+# Not available
+#
+%global unbundle_jqplot            0
+%global unbundle_respond           0%{?fedora}%{?rhel}
 
 #global pre_rel b.1
 
@@ -199,13 +215,18 @@ Requires:    perl(Unicode::CaseFold)
 Requires:    perl(Unicode::Normalize)
 
 # Bundled fonts
+%if %{unbundle_fontawesome}
 Requires:    fontawesome-fonts-web
+%endif
 %if %{unbundle_raleway}
 Requires:    impallari-raleway-fonts
 %endif
 # FIXME: foundation icons
 #        See https://fedoraproject.org/wiki/Foundation_icons_font
 #            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
+%if %{unbundle_foundation_icons}
+Requires:    foundation-icons-fonts
+%endif
 
 # Bundled javascript libs
 # foundation
@@ -230,9 +251,15 @@ Provides:    bundled(js-jquery) = 3.2.1
 %endif
 # jquery-migrate
 %if %{unbundle_jquery_migrate}
-Requires:    js-jquery-migrate
+Requires:    xstatic-jquery-migrate-common
 %else
-Provides:    bundled(js-jquery-migrate) = 1.4.1 
+Provides:    bundled(js-jquery-migrate) = 1.4.1
+%endif
+# jquery-minicolors
+%if %{unbundle_jquery_minicolors}
+Requires:    js-jquery-minicolors
+%else
+Provides:    bundled(js-jquery-minicolors) = 2.3.1
 %endif
 # jquery-ui
 %if %{unbundle_jquery_ui}
@@ -396,36 +423,109 @@ pushd po/web_help; rm -f stamp-po; make; popd
 %find_lang %{name}
 %find_lang web_help
 
-# Unbundle fonts from static_content/fonts/font-awesome
-rm -rf %{buildroot}/%{static_content}/fonts/font-awesome
-# Unbundle fonts from static_content/fonts/Raleway
+# Unbundle fonts from static_content/fonts
+# font-awesome
+%if %{unbundle_fontawesome}
+fa_css_files=$(find %{buildroot}/%{static_content}/fonts/font-awesome/css/ -maxdepth 1 -type f -printf '%f\n')
+fa_fonts_files=$(find %{buildroot}/%{static_content}/fonts/font-awesome/fonts/ -maxdepth 1 -type f -printf '%f\n')
+rm -f %{buildroot}/%{static_content}/fonts/font-awesome/css/*
+rm -f %{buildroot}/%{static_content}/fonts/font-awesome/fonts/*
+for css in $fa_css_files
+do
+    ln -s %{_datadir}/font-awesome-web/css/$css \
+        %{buildroot}/%{static_content}/fonts/font-awesome/css/$css
+done
+for fonts in $fa_fonts_files
+do
+    ln -s %{_datadir}/fonts/fontawesome/$fonts \
+        %{buildroot}/%{static_content}/fonts/font-awesome/fonts/$fonts
+done
+%endif
+# Raleway
 %if %{unbundle_raleway}
 rm -f %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
     %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
 %endif
-# FIXME: Unbundle static_content/fonts/foundation-icons
+# FIXME: foundation-icons
 
 # Unbundle javascript libraries from static_content/js
 # FIXME : foundation (Foundation for Sites 6, with float grid support)
+%if %{unbundle_foundation}
+rm -f %{buildroot}/%{static_content}/js/foundation/css/foundation-float.css
+rm -f %{buildroot}/%{static_content}/js/foundation/css/foundation-float.min.css
+ln -s %{_datadir}/javascript/foundation/css/foundation-float.css \
+    %{buildroot}/%{static_content}/js/foundation/css/foundation-float.css
+ln -s %{_datadir}/javascript/foundation/css/foundation-float.min.css \
+    %{buildroot}/%{static_content}/js/foundation/css/foundation-float.min.css
+rm -f %{buildroot}/%{static_content}/js/foundation/js/foundation.js
+rm -f %{buildroot}/%{static_content}/js/foundation/js/foundation.min.js
+ln -s %{_datadir}/javascript/foundation/js/foundation.js \
+    %{buildroot}/%{static_content}/js/foundation/js/foundation.js
+ln -s %{_datadir}/javascript/foundation/js/foundation.min.js \
+    %{buildroot}/%{static_content}/js/foundation/js/foundation.min.js
+#rm -f %{buildroot}/%{static_content}/js/foundation/js/vendor/what-input.js
+#ln -s %{_datadir}/javascript/what-input.js \
+#    %{buildroot}/%{static_content}/js/foundation/js/vendor/what-input.js
+%endif
 # html5shiv
 %if %{unbundle_html5shiv}
-rm -rf %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
+rm -f %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
 ln -s %{_datadir}/javascript/html5shiv.js \
     %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
 %endif
 # jquery
 %if %{unbundle_jquery}
-rm -rf %{buildroot}/%{static_content}/js/jquery.js
+rm -f %{buildroot}/%{static_content}/js/jquery.js
 ln -s %{_datadir}/javascript/jquery/3/jquery.js \
     %{buildroot}/%{static_content}/js/jquery.js
 %endif
 # FIXME : jquery-migrate
-# FIXME : jquery-ui
+%if %{unbundle_jquery_migrate}
+rm -f %{buildroot}/%{static_content}/js/jquery-migrate.js
+ln -s %{_datadir}/javascript/jquery_migrate/jquery-migrate.js \
+    %{buildroot}/%{static_content}/js/jquery-migrate.js
+%endif
+# FIXME : jquery-minicolors
+%if %{unbundle_jquery_minicolors}
+minicolors_files=$(find %{buildroot}/%{static_content}/js/jquery-minicolors/ -maxdepth 1 -type f -printf '%f\n')
+rm -f %{buildroot}/%{static_content}/js/jqpuery-minicolors/*
+for i in $minicolors_files
+do
+    ln -s %{_datadir}/javascript/jquery-minicolors/$i \
+        %{buildroot}/%{static_content}/js/jquery-minicolors/$i
+done
+%endif
+# jquery-ui
+%if %{unbundle_jquery_ui}
+rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.js
+rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.css
+ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.js \
+    %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.js
+ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.css \
+    %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.css
+# FIXME: Unbundle theme (smoothness ?)
+#theme_files=$(find %{buildroot}/%{static_content}/js/jquery-ui/images/ -maxdepth 1 -type f -printf '%f\n')
+#rm -f %{buildroot}/%{static_content}/js/jquery-ui/images/*
+#for i in $theme_files
+#do
+#    ln -s %{_datadir}/javascript/jquery_ui/themes/smoothness/images/$i \
+#        %{buildroot}/%{static_content}/js/jquery-ui/images/$i
+#done
+%endif
 # FIXME : jqplot
+%if %{unbundle_jqplot}
+jqplot_files=$(find %{buildroot}/%{static_content}/js/jqplot/ -maxdepth 1 -type f -printf '%f\n')
+rm -f %{buildroot}/%{static_content}/js/jqplot/*
+for i in $jqplot_files
+do
+    ln -s %{_datadir}/javascript/jqplot/$i \
+        %{buildroot}/%{static_content}/js/jqplot/$i
+done
+%endif
 # respond
 %if %{unbundle_respond}
-rm -rf %{buildroot}/%{static_content}/js/respondjs/respond.min.js
+rm -f %{buildroot}/%{static_content}/js/respondjs/respond.min.js
 ln -s %{_datadir}/javascript/respond.min.js \
     %{buildroot}/%{static_content}/js/respondjs/respond.min.js
 %endif
