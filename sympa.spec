@@ -32,11 +32,11 @@
 %global unbundle_jqplot            0
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
-#global pre_rel b.1
+%global pre_rel b.2
 
 Name:        sympa
-Version:     6.2.36
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
+Version:     6.2.37
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -841,8 +841,7 @@ fi
 %config(noreplace,missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/mime.types
 %config(noreplace,missingok) %attr(-,sympa,sympa) %{_sysconfdir}/sympa/sympa.wsdl
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/create_list_templates
-%dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/global_task_models
-%dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/list_task_models
+%dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/tasks
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/scenari
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/mail_tt2
 %dir %attr(-,sympa,sympa) %{_sysconfdir}/sympa/web_tt2
@@ -927,6 +926,12 @@ fi
 
 
 %changelog
+* Sat Nov 03 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.37-0.2.b.2
+- Update to 6.2.37 beta 2.
+
+* Sun Oct 07 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.37-0.1.b.1
+- Update to 6.2.37 beta 1.
+
 * Sun Sep 23 2018 IKEDA Soji <ikeda@conversion.co.jp> 6.2.36-1
 - Update to 6.2.36.
 
