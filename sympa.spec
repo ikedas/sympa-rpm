@@ -32,11 +32,11 @@
 %global unbundle_jqplot            0
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
-%global pre_rel b.2
+%global pre_rel b.3
 
 Name:        sympa
 Version:     6.2.37
-Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
+Release:     %{?pre_rel:0.}3%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -926,6 +926,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.37-0.3.b.3
+- Update to 6.2.37 beta 3.
+
 * Sat Nov 03 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.37-0.2.b.2
 - Update to 6.2.37 beta 2.
 
