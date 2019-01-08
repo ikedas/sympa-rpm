@@ -27,9 +27,9 @@
 %global unbundle_jquery_minicolors 0
 # Not available for EL6
 %global unbundle_jquery_ui         0%{?fedora}%{?el7}
-# Not available
+# Only available for F29+
+%global unbundle_jqplot            0%{?fc29}%{?fc30}
 #
-%global unbundle_jqplot            0
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
 #global pre_rel b.3
@@ -277,7 +277,7 @@ Provides:    bundled(js-jquery-ui) = 1.12.1
 %endif
 # jqplot
 %if %{unbundle_jqplot}
-Requires:    js-jqplot
+Requires:    js-jquery-jqplot
 %else
 Provides:    bundled(js-jquery-jqplot) = 1.0.8
 %endif
@@ -521,13 +521,13 @@ ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.css \
 #        %{buildroot}/%{static_content}/js/jquery-ui/images/$i
 #done
 %endif
-# FIXME : jqplot
+# jqplot
 %if %{unbundle_jqplot}
 jqplot_files=$(find %{buildroot}/%{static_content}/js/jqplot/ -maxdepth 1 -type f -printf '%f\n')
 rm -f %{buildroot}/%{static_content}/js/jqplot/*
 for i in $jqplot_files
 do
-    ln -s %{_datadir}/javascript/jqplot/$i \
+    ln -s %{_datadir}/javascript/jquery-jqplot/$i \
         %{buildroot}/%{static_content}/js/jqplot/$i
 done
 %endif
