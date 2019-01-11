@@ -65,6 +65,10 @@ Patch5:      sympa-6.2.36-wizard-mhonarc.patch
 Patch13:     sympa-6.2.19b.1-confdef.patch
 # Disable sympa service by default
 Patch14:     sympa-6.2-initdefault.patch
+# Weaken wwsympa/sympasoap link to sympa itself
+# Fixes wwsympa/sympasoap not being restarted on update
+# https://patch-diff.githubusercontent.com/raw/sympa-community/sympa/pull/525.patch
+Patch15:     sympa-6.2.38-wwsympa_sympasoap_unit_files_fix.patch
 
 BuildRequires: gcc, make
 BuildRequires: gettext
@@ -382,6 +386,7 @@ Sympa の nginx 対応。
 %patch5 -p0 -b .mhonarc
 %patch13 -p0 -b .confdef
 %patch14 -p0 -b .initdefault
+%patch15 -p1 -b .unit_files
 
 
 %build
