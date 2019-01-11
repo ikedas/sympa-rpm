@@ -8,7 +8,7 @@
 
 # Fonts
 #
-%global unbundle_fontawesome       0%{?fedora}
+%global unbundle_fontawesome       0%{?fedora}%{?el6}
 # Not available for EL
 %global unbundle_raleway           0%{?fedora}
 # Not available
