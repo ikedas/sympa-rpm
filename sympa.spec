@@ -8,7 +8,7 @@
 
 # Fonts
 #
-%global unbundle_fontawesome       0%{?fedora}
+%global unbundle_fontawesome       0%{?fedora}%{?el6}
 # Not available for EL
 %global unbundle_raleway           0%{?fedora}
 # Not available
@@ -251,7 +251,7 @@ Provides:    bundled(js-jquery) = 3.2.1
 %endif
 # jquery-migrate
 %if %{unbundle_jquery_migrate}
-%if %{?el7}
+%if 0%{?el7}
 Requires:    python-XStatic-JQuery-Migrate
 %else 
 Requires:    xstatic-jquery-migrate-common
@@ -267,7 +267,7 @@ Provides:    bundled(js-jquery-minicolors) = 2.3.1
 %endif
 # jquery-ui
 %if %{unbundle_jquery_ui}
-%if %{?el7}
+%if 0%{?el7}
 Requires:    python-XStatic-jquery-ui
 %else
 Requires:    xstatic-jquery-ui-common
