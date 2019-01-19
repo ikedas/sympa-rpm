@@ -35,8 +35,8 @@
 #global pre_rel b.3
 
 Name:        sympa
-Version:     6.2.38
-Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
+Version:     6.2.40
+Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -65,10 +65,6 @@ Patch5:      sympa-6.2.36-wizard-mhonarc.patch
 Patch13:     sympa-6.2.19b.1-confdef.patch
 # Disable sympa service by default
 Patch14:     sympa-6.2-initdefault.patch
-# Weaken wwsympa/sympasoap link to sympa itself
-# Fixes wwsympa/sympasoap not being restarted on update
-# https://patch-diff.githubusercontent.com/raw/sympa-community/sympa/pull/525.patch
-Patch15:     sympa-6.2.38-wwsympa_sympasoap_unit_files_fix.patch
 
 BuildRequires: gcc, make
 BuildRequires: gettext
@@ -386,7 +382,6 @@ Sympa の nginx 対応。
 %patch5 -p0 -b .mhonarc
 %patch13 -p0 -b .confdef
 %patch14 -p0 -b .initdefault
-%patch15 -p1 -b .unit_files
 
 
 %build
@@ -939,6 +934,9 @@ fi
 
 
 %changelog
+* Sat Jan 19 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.40-1
+- Update to 6.2.40.
+
 * Fri Jan 11 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.38-2
 - Fix fontawesome, jquery-ui and jquery-migrate unbundling on EL7.
 - Fix wwsympa/sympasoap not being restarted on update.
