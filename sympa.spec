@@ -35,7 +35,7 @@
 #global pre_rel b.3
 
 Name:        sympa
-Version:     6.2.38
+Version:     6.2.40
 Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
@@ -934,6 +934,13 @@ fi
 
 
 %changelog
+* Sat Jan 19 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.40-1
+- Update to 6.2.40.
+
+* Fri Jan 11 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.38-2
+- Fix fontawesome, jquery-ui and jquery-migrate unbundling on EL7.
+- Fix wwsympa/sympasoap not being restarted on update.
+
 * Fri Dec 21 2018 Xavier Bachelot <xavier@bachelot.org> 6.2.38-1
 - Update to 6.2.38.
 
