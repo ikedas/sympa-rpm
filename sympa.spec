@@ -27,16 +27,16 @@
 %global unbundle_jquery_minicolors 0
 # Not available for EL6
 %global unbundle_jquery_ui         0%{?fedora}%{?el7}
-# Not available
+# Only available for F29+
+%global unbundle_jqplot            0%{?fc29}%{?fc30}
 #
-%global unbundle_jqplot            0
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
 #global pre_rel b.3
 
 Name:        sympa
 Version:     6.2.40
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -216,76 +216,95 @@ Requires:    perl(Unicode::Normalize)
 
 # Bundled fonts
 %if %{unbundle_fontawesome}
-Requires:    fontawesome-fonts-web
+BuildRequires: fontawesome-fonts-web >= 4.3.0
+Requires:      fontawesome-fonts-web >= 4.3.0
+%else
+Provides:      bundled(fontawesome-fonts) = 4.3.0
 %endif
 %if %{unbundle_raleway}
-Requires:    impallari-raleway-fonts
+BuildRequires: impallari-raleway-fonts >= 3.0
+Requires:      impallari-raleway-fonts >= 3.0
+%else
+Provides:      bundled(impallari-raleway-fonts) = 3.0
 %endif
 # FIXME: foundation icons
 #        See https://fedoraproject.org/wiki/Foundation_icons_font
 #            http://zurb.com/playground/uploads/upload/upload/288/foundation-icons.zip
 %if %{unbundle_foundation_icons}
-Requires:    foundation-icons-fonts
+BuildRequires: foundation-icons-fonts >= 3.0
+Requires:      foundation-icons-fonts >= 3.0
+%else
+Provides:      bundled(foundation-icons-fonts) = 3.0
 %endif
 
 # Bundled javascript libs
 # foundation
 %if %{unbundle_foundation}
-Requires:    js-foundation6
+BuildRequires: js-foundation6 >= 6.4.2
+Requires:      js-foundation6 >= 6.4.2
 %else
-Provides:    bundled(js-foundation) = 6.4.2
+Provides:      bundled(js-foundation) = 6.4.2
 # Bundled in bundled js-foundation
-Provides:    bundled(js-what-input) = 4.2.0
+Provides:      bundled(js-what-input) = 4.2.0
 %endif
 # html5shiv
 %if %{unbundle_html5shiv}
-Requires:    js-html5shiv
+BuildRequires: js-html5shiv >= 3.7.2
+Requires:      js-html5shiv >= 3.7.2
 %else
-Provides:    bundled(js-html5shiv) = 3.7.2
+Provides:      bundled(js-html5shiv) = 3.7.2
 %endif
 # jquery
 %if %{unbundle_jquery}
-Requires:    js-jquery3
+BuildRequires: js-jquery3 >= 3.2.1
+Requires:      js-jquery3 >= 3.2.1
 %else
-Provides:    bundled(js-jquery) = 3.2.1
+Provides:      bundled(js-jquery) = 3.2.1
 %endif
 # jquery-migrate
 %if %{unbundle_jquery_migrate}
 %if 0%{?el7}
-Requires:    python-XStatic-JQuery-Migrate
+BuildRequires: python-XStatic-JQuery-Migrate >= 1.4.1
+Requires:      python-XStatic-JQuery-Migrate >= 1.4.1
 %else 
-Requires:    xstatic-jquery-migrate-common
+BuildRequires: xstatic-jquery-migrate-common >= 1.4.1
+Requires:      xstatic-jquery-migrate-common >= 1.4.1
 %endif
 %else
-Provides:    bundled(js-jquery-migrate) = 1.4.1
+Provides:      bundled(js-jquery-migrate) = 1.4.1
 %endif
 # jquery-minicolors
 %if %{unbundle_jquery_minicolors}
-Requires:    js-jquery-minicolors
+BuildRequires: js-jquery-minicolors >= 2.3.1
+Requires:      js-jquery-minicolors >= 2.3.1
 %else
-Provides:    bundled(js-jquery-minicolors) = 2.3.1
+Provides:      bundled(js-jquery-minicolors) = 2.3.1
 %endif
 # jquery-ui
 %if %{unbundle_jquery_ui}
 %if 0%{?el7}
-Requires:    python-XStatic-jquery-ui
+BuildRequires: python-XStatic-jquery-ui >= 1.12.0
+Requires:      python-XStatic-jquery-ui >= 1.12.0
 %else
-Requires:    xstatic-jquery-ui-common
+BuildRequires: xstatic-jquery-ui-common >= 1.12.0
+Requires:      xstatic-jquery-ui-common >= 1.12.0
 %endif
 %else
-Provides:    bundled(js-jquery-ui) = 1.12.1
+Provides:      bundled(js-jquery-ui) = 1.12.1
 %endif
 # jqplot
 %if %{unbundle_jqplot}
-Requires:    js-jqplot
+BuildRequires: js-jquery-jqplot >= 1.0.8
+Requires:      js-jquery-jqplot >= 1.0.8
 %else
-Provides:    bundled(js-jquery-jqplot) = 1.0.8
+Provides:      bundled(js-jquery-jqplot) = 1.0.8
 %endif
 # respond
 %if %{unbundle_respond}
-Requires:    js-respond
+BuildRequires: js-respond >= 1.4.2
+Requires:      js-respond >= 1.4.2
 %else
-Provides:    bundled(js-respond) = 1.4.2
+Provides:      bundled(js-respond) = 1.4.2
 %endif
 
 
@@ -521,13 +540,13 @@ ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.css \
 #        %{buildroot}/%{static_content}/js/jquery-ui/images/$i
 #done
 %endif
-# FIXME : jqplot
+# jqplot
 %if %{unbundle_jqplot}
 jqplot_files=$(find %{buildroot}/%{static_content}/js/jqplot/ -maxdepth 1 -type f -printf '%f\n')
 rm -f %{buildroot}/%{static_content}/js/jqplot/*
 for i in $jqplot_files
 do
-    ln -s %{_datadir}/javascript/jqplot/$i \
+    ln -s %{_datadir}/javascript/jquery-jqplot/$i \
         %{buildroot}/%{static_content}/js/jqplot/$i
 done
 %endif
@@ -934,6 +953,10 @@ fi
 
 
 %changelog
+* Mon Jan 28 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.40-2
+- Unbundle jqplot on F29+.
+- Use versioned Requires and BuildRequires for unbundled fonts and libs.
+
 * Sat Jan 19 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.40-1
 - Update to 6.2.40.
 
