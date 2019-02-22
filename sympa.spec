@@ -641,6 +641,8 @@ for conffile in \
         %{buildroot}%{_sysconfdir}/%{name}/;
 done
 
+# Create directory for S/MIME user certificates
+mkdir -p %{buildroot}%{_localstatedir}/lib/sympa/X509-user-certs
 
 %check
 make check
@@ -901,6 +903,7 @@ fi
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/list_data/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/css/
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/pictures/
+%attr(-,sympa,sympa) %{_localstatedir}/lib/sympa/X509-user-certs/
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
 %{_datadir}/sympa/
 %{_mandir}/man1/*
