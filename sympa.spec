@@ -32,10 +32,10 @@
 #
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
-#global pre_rel b.2
+%global pre_rel b.1
 
 Name:        sympa
-Version:     6.2.42
+Version:     6.2.43
 Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
@@ -614,6 +614,7 @@ ln -s %{_datadir}/doc/%{name}/README \
 ln -s %{_datadir}/doc/%{name}/README \
     %{buildroot}/%{_datadir}/sympa/default/README
 %endif
+mv %{buildroot}%{_sysconfdir}/sympa/sympa.conf-dist __doc/
 
 # Copy robot aliases.
 install -m 0644 %{SOURCE114} %{SOURCE115} %{buildroot}%{_sysconfdir}/sympa/
@@ -956,6 +957,10 @@ fi
 
 
 %changelog
+* Thu May 23 2019 IKEDA Soji <ikeda@conversion.co.jp> 6.2.43-0.1.b.1
+- Update to 6.2.43 beta 1.
+- Move sympa.conf-dist to doc.
+
 * Thu Mar 21 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.42-1
 - Update to 6.2.42.
 
