@@ -1,3 +1,19 @@
+# %1 is the path to dir bundling files (from)
+# %2 is the path to dir containing original files (with)
+%global unbundle_from_with() \
+  bundled_dir="%{buildroot}%1" \
+  bundled_files="$(find "${bundled_dir}" -maxdepth 1 -type f -printf '%f\\n')" \
+  original_dir="%2" \
+  for file in ${bundled_files} \
+  do \
+    if [ -f "${original_dir}/${file}" ] \
+    then \
+      rm -f "${bundled_dir}/${file}" \
+      ln -s "${original_dir}/${file}" "${bundled_dir}/${file}" \
+    fi \
+  done
+
+
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %global use_systemd 1
 %else
@@ -453,108 +469,67 @@ pushd po/web_help; rm -f stamp-po; make; popd
 # Unbundle fonts from static_content/fonts
 # font-awesome
 %if %{unbundle_fontawesome}
-fa_css_files=$(find %{buildroot}/%{static_content}/fonts/font-awesome/css/ -maxdepth 1 -type f -printf '%f\n')
-fa_fonts_files=$(find %{buildroot}/%{static_content}/fonts/font-awesome/fonts/ -maxdepth 1 -type f -printf '%f\n')
-rm -f %{buildroot}/%{static_content}/fonts/font-awesome/css/*
-rm -f %{buildroot}/%{static_content}/fonts/font-awesome/fonts/*
-for css in $fa_css_files
-do
-    ln -s %{_datadir}/font-awesome-web/css/$css \
-        %{buildroot}/%{static_content}/fonts/font-awesome/css/$css
-done
-for fonts in $fa_fonts_files
-do
-    ln -s %{_datadir}/fonts/fontawesome/$fonts \
-        %{buildroot}/%{static_content}/fonts/font-awesome/fonts/$fonts
-done
+%unbundle_from_with %{static_content}/fonts/font-awesome/fonts %{_datadir}/fonts/fontawesome
+%unbundle_from_with %{static_content}/fonts/font-awesome/css %{_datadir}/font-awesome-web/css
 %endif
+
 # Raleway
 %if %{unbundle_raleway}
-rm -f %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
-ln -s %{_datadir}/fonts/impallari-raleway/Raleway-Regular.otf \
-    %{buildroot}/%{static_content}/fonts/Raleway/Raleway-Regular.otf
+rm -f %{buildroot}%{static_content}/fonts/Raleway/OFL.txt
+%unbundle_from_with %{static_content}/fonts/Raleway %{_datadir}/fonts/impallari-raleway
 %endif
+
 # FIXME: foundation-icons
+%if %{unbundle_foundation_icons}
+rm -f %{buildroot}%{_datadir}/fonts/foundation-icons/preview.html
+%unbundle_from_with %{static_content}/fonts/foundation-icons %{_datadir}/fonts/foundation-icons
+%unbundle_from_with %{static_content}/fonts/foundation-icons/svgs %{_datadir}/fonts/foundation-icons/svgs
+%endif
 
 # Unbundle javascript libraries from static_content/js
 # FIXME : foundation (Foundation for Sites 6, with float grid support)
 %if %{unbundle_foundation}
-rm -f %{buildroot}/%{static_content}/js/foundation/css/foundation-float.css
-rm -f %{buildroot}/%{static_content}/js/foundation/css/foundation-float.min.css
-ln -s %{_datadir}/javascript/foundation/css/foundation-float.css \
-    %{buildroot}/%{static_content}/js/foundation/css/foundation-float.css
-ln -s %{_datadir}/javascript/foundation/css/foundation-float.min.css \
-    %{buildroot}/%{static_content}/js/foundation/css/foundation-float.min.css
-rm -f %{buildroot}/%{static_content}/js/foundation/js/foundation.js
-rm -f %{buildroot}/%{static_content}/js/foundation/js/foundation.min.js
-ln -s %{_datadir}/javascript/foundation/js/foundation.js \
-    %{buildroot}/%{static_content}/js/foundation/js/foundation.js
-ln -s %{_datadir}/javascript/foundation/js/foundation.min.js \
-    %{buildroot}/%{static_content}/js/foundation/js/foundation.min.js
-#rm -f %{buildroot}/%{static_content}/js/foundation/js/vendor/what-input.js
-#ln -s %{_datadir}/javascript/what-input.js \
-#    %{buildroot}/%{static_content}/js/foundation/js/vendor/what-input.js
+%unbundle_from_with %{static_content}/js/foundation/js %{_datadir}/javascript/foundation/js
+%unbundle_from_with %{static_content}/js/foundation/css %{_datadir}/javascript/foundation/css
+# what-input.js
+%unbundle_from_with %{static_content}/js/foundation/js/vendor %{_datadir}/javascript
 %endif
+
 # html5shiv
 %if %{unbundle_html5shiv}
-rm -f %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
-ln -s %{_datadir}/javascript/html5shiv.js \
-    %{buildroot}/%{static_content}/js/html5shiv/html5shiv.js
+%unbundle_from_with %{static_content}/js/html5shiv %{_datadir}/javascript/
 %endif
+
 # jquery
 %if %{unbundle_jquery}
-rm -f %{buildroot}/%{static_content}/js/jquery.js
-ln -s %{_datadir}/javascript/jquery/3/jquery.js \
-    %{buildroot}/%{static_content}/js/jquery.js
+%unbundle_from_with %{static_content}/js %{_datadir}/javascript/jquery/3
 %endif
+
 # FIXME : jquery-migrate
 %if %{unbundle_jquery_migrate}
-rm -f %{buildroot}/%{static_content}/js/jquery-migrate.js
-ln -s %{_datadir}/javascript/jquery_migrate/jquery-migrate.js \
-    %{buildroot}/%{static_content}/js/jquery-migrate.js
+%unbundle_from_with %{static_content}/js %{_datadir}/javascript/jquery_migrate
 %endif
+
 # FIXME : jquery-minicolors
 %if %{unbundle_jquery_minicolors}
-minicolors_files=$(find %{buildroot}/%{static_content}/js/jquery-minicolors/ -maxdepth 1 -type f -printf '%f\n')
-rm -f %{buildroot}/%{static_content}/js/jqpuery-minicolors/*
-for i in $minicolors_files
-do
-    ln -s %{_datadir}/javascript/jquery-minicolors/$i \
-        %{buildroot}/%{static_content}/js/jquery-minicolors/$i
-done
+%unbundle_from_with %{static_content}/js/jquery-minicolors %{_datadir}/javascript/jquery-minicolors
 %endif
+
 # jquery-ui
 %if %{unbundle_jquery_ui}
-rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.js
-rm -f %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.css
-ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.js \
-    %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.js
-ln -s %{_datadir}/javascript/jquery_ui/jquery-ui.css \
-    %{buildroot}/%{static_content}/js/jquery-ui/jquery-ui.css
+%unbundle_from_with %{static_content}/js/jquery-ui %{_datadir}/javascript/jquery_ui
 # FIXME: Unbundle theme (smoothness ?)
-#theme_files=$(find %{buildroot}/%{static_content}/js/jquery-ui/images/ -maxdepth 1 -type f -printf '%f\n')
-#rm -f %{buildroot}/%{static_content}/js/jquery-ui/images/*
-#for i in $theme_files
-#do
-#    ln -s %{_datadir}/javascript/jquery_ui/themes/smoothness/images/$i \
-#        %{buildroot}/%{static_content}/js/jquery-ui/images/$i
-#done
+#unbundle_from_with %{static_content}/js/jquery-ui/images %{_datadir}/javascript/jquery_ui/themes/smoothness/images
 %endif
+
 # jqplot
 %if %{unbundle_jqplot}
-jqplot_files=$(find %{buildroot}/%{static_content}/js/jqplot/ -maxdepth 1 -type f -printf '%f\n')
-rm -f %{buildroot}/%{static_content}/js/jqplot/*
-for i in $jqplot_files
-do
-    ln -s %{_datadir}/javascript/jquery-jqplot/$i \
-        %{buildroot}/%{static_content}/js/jqplot/$i
-done
+%unbundle_from_with %{static_content}/js/jqplot %{_datadir}/javascript/jquery-jqplot
 %endif
+
 # respond
 %if %{unbundle_respond}
-rm -f %{buildroot}/%{static_content}/js/respondjs/respond.min.js
-ln -s %{_datadir}/javascript/respond.min.js \
-    %{buildroot}/%{static_content}/js/respondjs/respond.min.js
+%unbundle_from_with %{static_content}/js/respondjs %{_datadir}/javascript
 %endif
 
 # Save version info.
