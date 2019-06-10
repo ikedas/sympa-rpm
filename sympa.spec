@@ -24,6 +24,7 @@
 
 # Fonts
 #
+# EL7 version (4.1.0) is missing some icons
 %global unbundle_fontawesome       0%{?fedora}%{?el6}
 # Not available for EL
 %global unbundle_raleway           0%{?fedora}
@@ -44,7 +45,7 @@
 # Not available for EL6
 %global unbundle_jquery_ui         0%{?fedora}%{?el7}
 # Only available for F29+
-%global unbundle_jqplot            0%{?fc29}%{?fc30}
+%global unbundle_jqplot            0%{?fedora}
 #
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
