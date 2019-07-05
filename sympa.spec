@@ -24,6 +24,7 @@
 
 # Fonts
 #
+# EL7 version (4.1.0) is missing some icons
 %global unbundle_fontawesome       0%{?fedora}%{?el6}
 # Not available for EL
 %global unbundle_raleway           0%{?fedora}
@@ -44,14 +45,14 @@
 # Not available for EL6
 %global unbundle_jquery_ui         0%{?fedora}%{?el7}
 # Only available for F29+
-%global unbundle_jqplot            0%{?fc29}%{?fc30}
+%global unbundle_jqplot            0%{?fedora}
 #
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
-%global pre_rel b.1
+#global pre_rel b.2
 
 Name:        sympa
-Version:     6.2.43
+Version:     6.2.44
 Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
@@ -932,6 +933,12 @@ fi
 
 
 %changelog
+* Wed Jun 26 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-1
+- Update to 6.2.44.
+
+* Mon Jun 10 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.43-0.2.b.2
+- Update to 6.2.43 beta 2.
+
 * Thu May 23 2019 IKEDA Soji <ikeda@conversion.co.jp> 6.2.43-0.1.b.1
 - Update to 6.2.43 beta 1.
 - Move sympa.conf-dist to doc.
