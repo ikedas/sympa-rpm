@@ -359,6 +359,11 @@ Requires: spawn-fcgi
 Conflicts: %{name}-httpd, %{name}-lighttpd
 
 
+%package devel-doc
+Summary: Sympa devel doc
+Requires: %{name} = %{version}-%{release}
+
+
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %{?perl_default_filter}
 %global __requires_exclude perl\\(Conf\\)
@@ -411,6 +416,10 @@ nginx support for Sympa.
 
 %description nginx -l ja
 Sympa の nginx 対応。
+
+
+%description devel-doc
+Sympa documentation for developers.
 
 
 %prep
@@ -884,7 +893,6 @@ fi
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
 %{_datadir}/sympa/
 %{_mandir}/man1/*
-%{_mandir}/man3/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %if %{use_systemd}
@@ -931,10 +939,14 @@ fi
 %{_initrddir}/sympasoap
 %endif
 
+%files devel-doc
+%{_mandir}/man3/*
+
 
 %changelog
 * Mon Jul 15 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-2
 - Don't package OChangeLog and ONEWS. Saves 5MB.
+- Move developers documentation to devel-doc sub-package.
 
 * Wed Jun 26 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-1
 - Update to 6.2.44.
