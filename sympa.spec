@@ -53,7 +53,7 @@
 
 Name:        sympa
 Version:     6.2.44
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
@@ -572,7 +572,7 @@ install -m 0644 %{SOURCE130} %{buildroot}%{_sysconfdir}/sysconfig/sympa
 
 # Copy docs.
 mv %{buildroot}%{_docdir}/%{name} __doc
-cp -p AUTHORS.md CONTRIBUTING.md NEWS.md OChangeLog ONEWS README.md __doc/
+cp -p AUTHORS.md CONTRIBUTING.md NEWS.md README.md __doc/
 %if %{use_systemd}
 cp -p %{SOURCE113} __doc/README.RPM.md
 %else
@@ -933,6 +933,9 @@ fi
 
 
 %changelog
+* Mon Jul 15 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-2
+- Don't package OChangeLog and ONEWS. Saves 5MB.
+
 * Wed Jun 26 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-1
 - Update to 6.2.44.
 
