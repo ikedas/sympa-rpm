@@ -32,6 +32,7 @@
 %global unbundle_foundation_icons  0
 
 # Javascripts
+#
 # Not available
 %global unbundle_foundation        0
 # Not available for EL
@@ -49,6 +50,40 @@
 #
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
+# Licenses
+# Sympa itself is GPLv2+.
+# Possibly bundled fonts are :
+# - fontawesome-fonts :      OFL
+# - fontawesome-fonts-web:   OFL and MIT
+# - impallari-raleway-fonts: OFL
+# - foundation-icons-fonts:  MIT
+# Possibly bundled javascripts are :
+# - js-html5shiv:            MIT or GPLv2
+# - js-jquery-jqplot:        MIT or GPLv2
+# - js-jquery:               MIT
+# - js-respond:              MIT
+# - js-jquery-ui:            MIT
+# - js-foundation:           MIT
+# - js-jquery-migrate:       MIT
+# - js-jquery-minicolors:    MIT
+%global licenses_bundled     %{nil} 
+# OFL and MIT
+%if ! %{unbundle_fontawesome}
+%global licenses_bundled %{licenses_bundled} and (OFL and MIT)
+%endif
+# OFL
+%if ! %{unbundle_raleway}
+%global licenses_bundled %{licenses_bundled} and OFL
+%endif
+# MIT
+%if ! %{unbundle_foundation_icons} || ! %{unbundle_foundation} || ! %{unbundle_jquery} || ! %{unbundle_jquery_migrate} || ! %{unbundle_jquery_minicolors} || ! %{unbundle_jquery_ui} || ! %{unbundle_respond}
+%global licenses_bundled %{licenses_bundled} and MIT
+%endif
+# MIT or GPLv2
+%if ! %{unbundle_html5shiv} || ! %{unbundle_jqplot}
+%global licenses_bundled %{licenses_bundled} and (MIT or GPLv2)
+%endif
+
 #global pre_rel b.2
 
 Name:        sympa
@@ -57,7 +92,8 @@ Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
-License:     GPLv2+ and MIT
+# The License: tag depends on bundled code for a given distro/release
+License:     GPLv2+%{licenses_bundled}
 URL:         http://www.sympa.org
 Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
@@ -947,6 +983,7 @@ fi
 * Mon Jul 15 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-2
 - Don't package OChangeLog and ONEWS. Saves 5MB.
 - Move developers documentation to devel-doc sub-package.
+- Compute an accurate License: tag.
 
 * Wed Jun 26 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-1
 - Update to 6.2.44.
