@@ -283,7 +283,7 @@ Provides:      bundled(js-jquery) = 3.2.1
 %if 0%{?el7}
 BuildRequires: python-XStatic-JQuery-Migrate >= 1.4.1
 Requires:      python-XStatic-JQuery-Migrate >= 1.4.1
-%else 
+%else
 BuildRequires: xstatic-jquery-migrate-common >= 1.4.1
 Requires:      xstatic-jquery-migrate-common >= 1.4.1
 %endif
