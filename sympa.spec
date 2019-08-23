@@ -32,6 +32,7 @@
 %global unbundle_foundation_icons  0
 
 # Javascripts
+#
 # Not available
 %global unbundle_foundation        0
 # Not available for EL
@@ -49,15 +50,50 @@
 #
 %global unbundle_respond           0%{?fedora}%{?rhel}
 
+# Licenses
+# Sympa itself is GPLv2+.
+# Possibly bundled fonts are :
+# - fontawesome-fonts :      OFL
+# - fontawesome-fonts-web:   OFL and MIT
+# - impallari-raleway-fonts: OFL
+# - foundation-icons-fonts:  MIT
+# Possibly bundled javascripts are :
+# - js-html5shiv:            MIT or GPLv2
+# - js-jquery-jqplot:        MIT or GPLv2
+# - js-jquery:               MIT
+# - js-respond:              MIT
+# - js-jquery-ui:            MIT
+# - js-foundation:           MIT
+# - js-jquery-migrate:       MIT
+# - js-jquery-minicolors:    MIT
+%global licenses_bundled     %{nil} 
+# OFL and MIT
+%if ! %{unbundle_fontawesome}
+%global licenses_bundled %{licenses_bundled} and (OFL and MIT)
+%endif
+# OFL
+%if ! %{unbundle_raleway}
+%global licenses_bundled %{licenses_bundled} and OFL
+%endif
+# MIT
+%if ! %{unbundle_foundation_icons} || ! %{unbundle_foundation} || ! %{unbundle_jquery} || ! %{unbundle_jquery_migrate} || ! %{unbundle_jquery_minicolors} || ! %{unbundle_jquery_ui} || ! %{unbundle_respond}
+%global licenses_bundled %{licenses_bundled} and MIT
+%endif
+# MIT or GPLv2
+%if ! %{unbundle_html5shiv} || ! %{unbundle_jqplot}
+%global licenses_bundled %{licenses_bundled} and (MIT or GPLv2)
+%endif
+
 #global pre_rel b.2
 
 Name:        sympa
 Version:     6.2.44
-Release:     %{?pre_rel:0.}1%{?pre_rel:.%pre_rel}%{?dist}
+Release:     %{?pre_rel:0.}2%{?pre_rel:.%pre_rel}%{?dist}
 Summary:     Powerful multilingual List Manager
 Summary(fr): Gestionnaire de listes électroniques
 Summary(ja): 高機能で多言語対応のメーリングリスト管理ソフトウェア
-License:     GPLv2+ and MIT
+# The License: tag depends on bundled code for a given distro/release
+License:     GPLv2+%{licenses_bundled}
 URL:         http://www.sympa.org
 Source0:     https://github.com/sympa-community/sympa/releases/download/%{version}%{?pre_rel}/%{name}-%{version}%{?pre_rel}.tar.gz
 
@@ -283,7 +319,7 @@ Provides:      bundled(js-jquery) = 3.2.1
 %if 0%{?el7}
 BuildRequires: python-XStatic-JQuery-Migrate >= 1.4.1
 Requires:      python-XStatic-JQuery-Migrate >= 1.4.1
-%else 
+%else
 BuildRequires: xstatic-jquery-migrate-common >= 1.4.1
 Requires:      xstatic-jquery-migrate-common >= 1.4.1
 %endif
@@ -359,6 +395,11 @@ Requires: spawn-fcgi
 Conflicts: %{name}-httpd, %{name}-lighttpd
 
 
+%package devel-doc
+Summary: Sympa devel doc
+Requires: %{name} = %{version}-%{release}
+
+
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %{?perl_default_filter}
 %global __requires_exclude perl\\(Conf\\)
@@ -411,6 +452,10 @@ nginx support for Sympa.
 
 %description nginx -l ja
 Sympa の nginx 対応。
+
+
+%description devel-doc
+Sympa documentation for developers.
 
 
 %prep
@@ -572,7 +617,7 @@ install -m 0644 %{SOURCE130} %{buildroot}%{_sysconfdir}/sysconfig/sympa
 
 # Copy docs.
 mv %{buildroot}%{_docdir}/%{name} __doc
-cp -p AUTHORS.md CONTRIBUTING.md NEWS.md OChangeLog ONEWS README.md __doc/
+cp -p AUTHORS.md CONTRIBUTING.md NEWS.md README.md __doc/
 %if %{use_systemd}
 cp -p %{SOURCE113} __doc/README.RPM.md
 %else
@@ -884,7 +929,6 @@ fi
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa/
 %{_datadir}/sympa/
 %{_mandir}/man1/*
-%{_mandir}/man3/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %if %{use_systemd}
@@ -931,8 +975,16 @@ fi
 %{_initrddir}/sympasoap
 %endif
 
+%files devel-doc
+%{_mandir}/man3/*
+
 
 %changelog
+* Mon Jul 15 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-2
+- Don't package OChangeLog and ONEWS. Saves 5MB.
+- Move developers documentation to devel-doc sub-package.
+- Compute an accurate License: tag.
+
 * Wed Jun 26 2019 Xavier Bachelot <xavier@bachelot.org> 6.2.44-1
 - Update to 6.2.44.
 
